@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, TextField } from "@mui/material"
-import MyBlock from '../../components/MyBlock'
+import Block from '../../components/Block'
 import TxtField from '../../components/TxtField'
 import MyButton from '../../components/MyButton'
 import TableCell from '@mui/material/TableCell';
@@ -15,7 +15,7 @@ const Accounts = () => {
   return (
     <Grid container spacing={1} direction={'column'}>
       <Grid item>
-        <MyBlock>
+        <Block>
           <div className="account-search">
             <TxtField type='text'>
 
@@ -24,10 +24,10 @@ const Accounts = () => {
               Search
             </MyButton>
           </div>
-        </MyBlock>
+        </Block>
       </Grid>
       <Grid item>
-        <MyBlock padding={"1rem 0 0 0"}>
+        <Block padding={"1rem 0 0 0"}>
           <div className="account-table">
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -54,7 +54,7 @@ const Accounts = () => {
               </Table>
             </TableContainer>
           </div>
-        </MyBlock>
+        </Block>
       </Grid>
     </Grid>
   )

@@ -1,12 +1,12 @@
 import { Grid } from '@mui/material'
 import React from 'react'
-import MyBlock from '../../components/MyBlock'
+import Block from '../../components/Block'
 
 const Dashboard = () => {
   return (
     <Grid container spacing={1} direction={"column"} >
       <Grid item >
-        <MyBlock >
+        <Block >
           <div className='dashboard'>
             <div className='dashboard-header'>
               <div className="dashboard-header-title">
@@ -40,17 +40,17 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </MyBlock>
+        </Block>
       </Grid>
       <Grid item >
-        <MyBlock >
+        <Block >
           Account
-        </MyBlock>
+        </Block>
       </Grid>
       <Grid item >
-        <MyBlock >
+        <Block >
           Course
-        </MyBlock>
+        </Block>
       </Grid>
 
     </Grid>

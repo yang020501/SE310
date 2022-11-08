@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const MyBlock = props => {
+const Block = props => {
     const block = props.padding ? props.padding : ''
     return (
         <div className='block' style={{ padding: `${block}` }}>
@@ -12,8 +12,8 @@ const MyBlock = props => {
     )
 }
 
-MyBlock.propTypes = {
+Block.propTypes = {
     padding: PropTypes.string
 }
 
-export default MyBlock
+export default Block

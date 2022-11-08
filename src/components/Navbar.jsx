@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 
-const MyNavBar = props => {
+const Navbar = props => {
     return (
         <div className="navbar">
             <div className="navbar-header">
@@ -18,8 +18,8 @@ const MyNavBar = props => {
     )
 }
 
-MyNavBar.propTypes = {
+Navbar.propTypes = {
 
 }
 
-export default MyNavBar
+export default Navbar
