@@ -1,0 +1,55 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 14pt;
+
+    @include mobile {
+        font-size: 11pt;
+    }
+}
+body {
+    height: 100vh;
+    font-size: 14pt;
+    color: $txt-main-color;
+    
+    .MuiTextField-root {
+        background-color: $txtbox-bg;
+    }
+    .MuiInputBase-root {
+        color: $txt-main-color;
+    }
+    .MuiOutlinedInput-root {
+        color: $txt-main-color;
+        outline: $txt-main-color;
+        border-color: $txt-main-color;
+    }
+    .MuiInputLabel-root {
+        color: $txt-main-color;
+    }
+
+    .MuiButton-root {
+        color: $btn-main-color;
+        background-color: $btn-main-bg;
+        opacity: 1;
+        transition: 0.75s;
+
+    }
+    .MuiButton-root:hover {
+        color: $btn-main-color;
+        background-color: $btn-main-bg;
+        opacity: 0.75;
+    }
+}
+a {
+    color: $txt-main-color !important;
+    text-decoration: none;
+}
+
+.main {
+    padding: calc(#{$header-height} + 10px) 0.25rem 0 0.25rem;
+}
