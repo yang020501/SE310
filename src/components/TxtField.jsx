@@ -11,8 +11,6 @@ const TxtField = props => {
             required={props.required ? true : false}
             fullWidth={props.fullWidth ? true : false}
             label={props.label ? props.label : ''}
-            name="Username"
-            // autoComplete="email"
             type={props.type}
             autoFocus={props.autoFocus ? true : false}
             error={props.error ? true : false}
@@ -32,6 +30,7 @@ TxtField.propTypes = {
     placeholder: PropTypes.string,
     size: PropTypes.string,
     margin: PropTypes.string
+    
 }
 
 export default TxtField

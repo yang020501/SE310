@@ -5,18 +5,14 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-html {
-    font-size: 14pt;
-
-    @include mobile {
-        font-size: 11pt;
-    }
-}
 body {
-    height: 100vh;
     font-size: 14pt;
     color: $txt-main-color;
-    
+    font-size: 14pt;
+    @include mobile {
+        font-size: 10pt;
+    }
+
     .MuiTextField-root {
         background-color: $txtbox-bg;
     }
@@ -37,7 +33,7 @@ body {
         background-color: $btn-main-bg;
         opacity: 1;
         transition: 0.75s;
-
+        height: 100%;
     }
     .MuiButton-root:hover {
         color: $btn-main-color;
@@ -46,10 +42,40 @@ body {
     }
 }
 a {
-    color: $txt-main-color !important;
     text-decoration: none;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+    border-radius: 5px;
+    padding: 0px 5px;
+    transition: ease-in 0.25s;
+
+    &:hover,
+    &:focus {
+        background-color: #2e2e2e86;
+    }
+    &:active {
+        background-color: #00000066;
+    }
 }
 
 .main {
     padding: calc(#{$header-height} + 10px) 0.25rem 0 0.25rem;
+    a {
+        color: $txt-main-color !important;
+    }
+}
+.container {
+    height: 100vh;
+    background-image: url("../asset/pictures/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    color: black;
+
+    a {
+        color: black !important;
+    }
 }

@@ -32,7 +32,7 @@ const Login = () => {
                             autoComplete="email"
                             type="email"
                             autoFocus
-                            
+
                         // error
                         />
                         <TextField
@@ -48,7 +48,9 @@ const Login = () => {
                         // error
                         />
                         <div className='Line'></div>
-                        <MyButton type="submit" fullWidth >Login</MyButton>
+                        <div>
+                            <MyButton type="submit" fullWidth >Login</MyButton>
+                        </div>
                     </Box>
                 </div>
             </div>
