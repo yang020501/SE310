@@ -1,3 +1,18 @@
-.courses{
-    
+.courses {
+    @include flex(center, center);
+    flex-direction: column;
+    height: 100%;
+
+    &-datagrid,
+    &-search,
+    &-lineaction {
+        width: 100%;
+    }
+    &-lineaction{
+        padding: 0.5rem 3rem;
+    }
+    &-search{
+        text-align: center;
+        padding: 0.75rem;
+    }
 }

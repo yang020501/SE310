@@ -1,0 +1,6 @@
+.searchbar {
+    @include flex(center, center);
+    flex-direction: column;
+    background-color: #f6f6f6;
+    border-radius: 5px;
+}

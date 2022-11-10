@@ -26,39 +26,43 @@ const NavbarHeader = props => {
 
                 </div>
             </div>
-            <div className="navbarheader-sidemenu" ref={menuRef}>
-                <div className="navbarheader-sidemenu-header">
-                    <div className="navbarheader-sidemenu-header-item bold">
-                        <Avatar alt="Avatar" src={require('../asset/pictures/avatar.jpg')} />
-                        Nguyen Hoang Thai Duong
+            <div className="navbarheader-side">
+
+
+                <div className="navbarheader-side-sidemenu" ref={menuRef}>
+                    <div className="navbarheader-side-sidemenu-header">
+                        <div className="navbarheader-side-sidemenu-header-item bold">
+                            <Avatar alt="Avatar" src={require('../asset/pictures/avatar.jpg')} />
+                            Nguyen Hoang Thai Duong
+                        </div>
+                        <div className="navbarheader-side-sidemenu-header-item">
+                            <Link>
+                                <SettingsIcon style={{ width: "24px" }} />
+                                Profile Settings
+                            </Link>
+
+                        </div>
+                        <div className="navbarheader-side-sidemenu-header-item" >
+                            <Link to={"/login"}>
+                                <LogoutIcon />
+                                Log Out
+                            </Link>
+                        </div>
                     </div>
-                    <div className="navbarheader-sidemenu-header-item">
-                        <Link>
-                            <SettingsIcon style={{ width: "24px" }} />
-                            Profile Settings
-                        </Link>
+                    <div className="divider">
 
                     </div>
-                    <div className="navbarheader-sidemenu-header-item" >
-                        <Link to={"/login"}>
-                            <LogoutIcon />
-                            Log Out
-                        </Link>
-                    </div>
-                </div>
-                <div className="divider">
-
-                </div>
-                <div className="navbarheader-sidemenu-body">
-                    <div className="navbarheader-sidemenu-body-item">
-                        <Link to={"/"}>
-                            Dashboard
-                        </Link>
-                    </div>
-                    <div className="navbarheader-sidemenu-body-item">
-                        <Link to={"/login"}>
-                            Courses
-                        </Link>
+                    <div className="navbarheader-side-sidemenu-body">
+                        <div className="navbarheader-side-sidemenu-body-item">
+                            <Link to={"/"}>
+                                Dashboard
+                            </Link>
+                        </div>
+                        <div className="navbarheader-side-sidemenu-body-item">
+                            <Link to={"/login"}>
+                                Courses
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

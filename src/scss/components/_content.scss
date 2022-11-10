@@ -1,19 +1,16 @@
 .content {
-    @include flex(center,flex-start);
+    @include flex(center, flex-start);
 
-    height: 100vh;
-    padding-top: calc(#{$navbar-header-height} + 80px);
+    margin-top: calc(#{$navbar-header-height} + 80px);
     flex-direction: column;
-
+    // overflow: auto;
 
     @include mobile {
         padding-top: calc(#{$navbar-header-height} + 50px);
     }
-    &-search{
- 
+    &-search {
         width: 100%;
         background-color: $main-bg;
-        
     }
     &-body {
         background-color: $main-bg;

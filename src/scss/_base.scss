@@ -7,8 +7,6 @@
 
 body {
     font-size: 14pt;
-    color: $txt-main-color;
-    font-size: 14pt;
     @include mobile {
         font-size: 10pt;
     }
@@ -40,6 +38,21 @@ body {
         background-color: $btn-main-bg;
         opacity: 0.75;
     }
+    .MuiDataGrid-columnHeaderTitle {
+        color: black;
+        font-weight: 900 !important;
+    }
+    .MuiDataGrid-cell {
+        color: $txt-third-color;
+        font-weight: 700;
+    }
+    .MuiDataGrid-root {
+        border-left: unset;
+        border-right: unset;
+    }
+    .MuiBreadcrumbs-root {
+        margin-left: 10px;
+    }
 }
 a {
     text-decoration: none;
@@ -62,18 +75,20 @@ a {
 }
 
 .main {
+    color: $txt-main-color;
     padding: calc(#{$header-height} + 10px) 0.25rem 0 0.25rem;
     a {
         color: $txt-main-color !important;
     }
 }
 .container {
-    height: 100vh;
+    height: 100%;
     background-image: url("../asset/pictures/background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
     color: black;
+    overflow: auto;
 
     a {
         color: black !important;
