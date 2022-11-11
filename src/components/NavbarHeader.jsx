@@ -41,7 +41,7 @@ const NavbarHeader = props => {
                 <div className="navbarheader-side-sidemenu" ref={menuRef}>
                     <div className="navbarheader-side-sidemenu-header">
                         <div className="navbarheader-side-sidemenu-header-item bold">
-                            <Avatar alt="Avatar" src={require('../asset/pictures/avatar.jpg')} />
+                            <Avatar alt="Avatar" variant='rounded' src={require('../asset/pictures/avatar.jpg')} > N</Avatar>
                             Nguyen Hoang Thai Duong
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item">

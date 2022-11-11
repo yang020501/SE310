@@ -1,62 +1,44 @@
 import React from 'react'
-import { Grid, TextField } from "@mui/material"
-import Block from '../../components/Block'
-import TxtField from '../../components/TxtField'
-import MyButton from '../../components/MyButton'
-import TableCell from '@mui/material/TableCell';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Template, {
+  TemplateTitle, TemplateLineAction, TemplateDataGrid,
+  TemplateSearch, TemplateModal, TemplateModalTitle,
+  TemplateModalBody, TemplateModalAction
+} from '../../components/Template';
+import MyDataGrid from '../../components/MyDataGrid'
+import SearchBar from '../../components/SearchBar';
+import LineAction from '../../components/LineAction';
 
 const Accounts = () => {
   return (
-    <Grid container spacing={1} direction={'column'}>
-      <Grid item>
-        <Block>
-          <div className="account-search">
-            <TxtField type='text'>
+    <Template>
+      <TemplateSearch>
+        <SearchBar />
+      </TemplateSearch>
+      <TemplateLineAction>
+        <LineAction
+          name={"Change Lecturer"}
 
-            </TxtField>
-            <MyButton>
-              Search
-            </MyButton>
-          </div>
-        </Block>
-      </Grid>
-      <Grid item>
-        <Block padding={"1rem 0 0 0"}>
-          <div className="account-table">
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead >
-                  <TableRow>
-                    <TableCell>Dessert (100g serving)</TableCell>
-                    <TableCell align="right">Calories</TableCell>
-                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow
-                  >
-                    <TableCell component="th" scope="row">Hello
-                    </TableCell>
-                    <TableCell align="right">hello</TableCell>
-                    <TableCell align="right">hello</TableCell>
-                    <TableCell align="right">hello</TableCell>
-                    <TableCell align="right">hello</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-        </Block>
-      </Grid>
-    </Grid>
+        />
+      </TemplateLineAction>
+      <TemplateDataGrid>
+        <MyDataGrid />
+      </TemplateDataGrid>
+      <TemplateModal
+        // open={open}
+        size="lg"
+        form={false}
+      >
+        <TemplateModalTitle>
+          <SearchBar data={[]} />
+        </TemplateModalTitle>
+        <TemplateModalBody>
+          <MyDataGrid />
+        </TemplateModalBody>
+        <TemplateModalAction
+          size="lg"
+        />
+      </TemplateModal>
+    </Template>
   )
 }
 

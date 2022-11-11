@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap");
 * {
     padding: 0;
     margin: 0;
@@ -6,6 +7,8 @@
 }
 
 body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
     font-size: 14pt;
     @include mobile {
         font-size: 10pt;
@@ -36,7 +39,7 @@ body {
     .btnError {
         .MuiButton-root:hover,
         .MuiButton-root {
-            background-color: $error-color;
+            background-color: $btn-second-bg;
         }
     }
     .MuiDataGrid-columnHeaderTitle {
@@ -56,6 +59,9 @@ body {
     }
     .MuiDivider-root {
         margin: 0;
+    }
+    .MuiPaper-root {
+        box-shadow: none;
     }
 }
 a {
@@ -92,8 +98,8 @@ a {
     background-size: cover;
     background-position-y: center;
     color: black;
+    background-attachment: fixed;
     overflow: auto;
-
     a {
         color: black !important;
     }

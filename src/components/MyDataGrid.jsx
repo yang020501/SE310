@@ -26,7 +26,7 @@ const MyDataGrid = props => {
         props.ColumnHeader.map((item) => {
             return {
                 field: item.key,
-                headerName: item.key === "id" ? "Number" : item.value,
+                headerName: item.key === "id" ? "No." : item.value,
                 width: item.width,
                 headerAlign: 'center',
                 align: 'center',

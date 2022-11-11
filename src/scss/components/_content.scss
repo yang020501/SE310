@@ -1,6 +1,7 @@
 .content {
     @include flex(center, flex-start);
 
+    // display: none;
     margin-top: calc(#{$navbar-header-height} + 75px);
     flex-direction: column;
     // overflow: auto;
