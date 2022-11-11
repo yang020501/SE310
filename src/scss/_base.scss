@@ -10,20 +10,16 @@ body {
     @include mobile {
         font-size: 10pt;
     }
-
-    .MuiTextField-root {
-        background-color: $txtbox-bg;
+    .MuiButton-root {
+        width: 100%;
+        height: 100%;
     }
     .MuiInputBase-root {
-        color: $txt-main-color;
+        color: $txt-third-color;
     }
     .MuiOutlinedInput-root {
-        color: $txt-main-color;
-        outline: $txt-main-color;
-        border-color: $txt-main-color;
-    }
-    .MuiInputLabel-root {
-        color: $txt-main-color;
+        color: $txt-third-color;
+        outline: $txt-third-color;
     }
 
     .MuiButton-root {
@@ -36,7 +32,12 @@ body {
     .MuiButton-root:hover {
         color: $btn-main-color;
         background-color: $btn-main-bg;
-        opacity: 0.75;
+    }
+    .btnError {
+        .MuiButton-root:hover,
+        .MuiButton-root {
+            background-color: $error-color;
+        }
     }
     .MuiDataGrid-columnHeaderTitle {
         color: black;
@@ -52,6 +53,9 @@ body {
     }
     .MuiBreadcrumbs-root {
         margin-left: 10px;
+    }
+    .MuiDivider-root {
+        margin: 0;
     }
 }
 a {

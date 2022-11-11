@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import MyButton from './MyButton'
 import MyBreadcrums from './MyBreadcrums'
 import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -11,9 +10,19 @@ import { Link } from 'react-router-dom'
 const NavbarHeader = props => {
     const menuRef = useRef(null);
     const iconRef = useRef(null);
+    const closeSideMenu = () => {
+        // let valid = iconRef.current.activeElement
+        // if (!(valid.value === "gridoption")) {
+        //     menuRef.current.classList.remove('active')
+        //     iconRef.current.classList.toggle('active')
+        // }
+        // console.log(valid);
+        // window.removeEventListener('click', closeSideMenu)
+    }
     const menuToggle = () => {
         menuRef.current.classList.toggle('active')
         iconRef.current.classList.toggle('active')
+        // window.addEventListener('click', closeSideMenu)
     }
     return (
         <div className='navbarheader'>

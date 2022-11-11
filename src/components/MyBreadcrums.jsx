@@ -10,7 +10,7 @@ const MyBreadcrums = props => {
         <Breadcrumbs aria-label="breadcrumb">
             {
                 links.map((item, index, arr) => {
-                    return item == "" ? ""
+                    return item === "" ? ""
                         : (
                             <Link
                                 key={index}

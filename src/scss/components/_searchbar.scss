@@ -1,6 +1,24 @@
 .searchbar {
     @include flex(center, center);
-    flex-direction: column;
-    background-color: #f6f6f6;
-    border-radius: 5px;
+
+    .MuiPaper-root {
+        background-color: #f7f7f7;
+        margin: auto;
+        padding: 0.2rem;
+        width: 55%;
+        border-radius: 5px;
+
+        .MuiInputBase-root {
+            color: inherit;
+        }
+    }
+    &-cancel {
+
+        transform: scale(0);
+        transition: transform ease-out 0.5s;
+    }
+    .show {
+        transform: scale(1);
+        transition: transform ease-out 0.5s;
+    }
 }

@@ -1,16 +1,12 @@
 .content {
     @include flex(center, flex-start);
 
-    margin-top: calc(#{$navbar-header-height} + 80px);
+    margin-top: calc(#{$navbar-header-height} + 75px);
     flex-direction: column;
     // overflow: auto;
 
     @include mobile {
         padding-top: calc(#{$navbar-header-height} + 50px);
-    }
-    &-search {
-        width: 100%;
-        background-color: $main-bg;
     }
     &-body {
         background-color: $main-bg;

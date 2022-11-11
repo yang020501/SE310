@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { DataGrid } from "@mui/x-data-grid"
 import DataGridOptions from './DataGridOptions'
@@ -8,24 +8,32 @@ const MyDataGrid = props => {
     const mousePosition = useMousePosition()
     const dataGridFunctionRef = useRef(null)
     const [pageSize, setPageSize] = React.useState(5);
-    const openOptionMenu = () => {
 
-        dataGridFunctionRef.current.style.top = `${mousePosition.y + 5}px`
+    const closeOptionMenu = () => {
+        let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
+        if (!(valid.value === "gridoption")) {
+            dataGridFunctionRef.current.classList.remove('show')
+            window.removeEventListener('click', closeOptionMenu)
+        }
+    }
+    const openOptionMenu = () => {
+        dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
         dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-        dataGridFunctionRef.current.classList.toggle('show')
+        dataGridFunctionRef.current.classList.add('show')
+        window.addEventListener('click', closeOptionMenu)
     }
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
                 field: item.key,
-                headerName: item.key == "id" ? "Number" : item.value,
+                headerName: item.key === "id" ? "Number" : item.value,
                 width: item.width,
                 headerAlign: 'center',
                 align: 'center',
                 renderCell: (params) => {
-                    if (params.field == "lecturer")
+                    if (params.field === "lecturer")
                         return params.value ? params.value : (<DataGridAdd />)
-                    else if (params.field == "option")
+                    else if (params.field === "option")
                         return (<DataGridOptions click={openOptionMenu} />)
                 }
 
@@ -47,10 +55,11 @@ const MyDataGrid = props => {
         }
     }) : []
 
+
     return (
         <div className="datagrid">
             <DataGrid
-                density='comfortable'
+                // density='comfortable'
                 autoHeight
                 rows={rows}
                 columns={columns}
@@ -59,7 +68,6 @@ const MyDataGrid = props => {
                 rowsPerPageOptions={[5, 10, 15]}
                 // checkboxSelection
                 disableSelectionOnClick
-
                 experimentalFeatures={{ newEditingApi: true }}
             />
             <div className="datagrid-function" ref={dataGridFunctionRef}>

@@ -1,4 +1,4 @@
-.courses {
+.template {
     @include flex(center, center);
     flex-direction: column;
     height: 100%;
@@ -21,7 +21,12 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
+        &.lg {
+            width: 60%;
+        }
+        &.sm {
+            width: 35%;
+        }
         &-content {
             // @include flex(center, center);
             flex-direction: column;
@@ -60,18 +65,15 @@
                 height: 25px;
                 column-gap: 10%;
                 &-btn {
+                    &.lg {
+                        width: 15%;
+                    }
+                
                     width: 30%;
                     height: 100%;
                 }
+                
             }
         }
-    }
-    .lg {
-        width: 75%;
-        height: 60%;
-    }
-    .sm {
-        height: 40%;
-        width: 35%;
     }
 }

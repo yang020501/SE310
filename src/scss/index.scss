@@ -6,6 +6,8 @@
 @import "./pages/Admin/dashboard";
 @import "./pages/Admin/account";
 @import "./pages/User/courses";
+@import "./pages/User/course";
+@import "./pages/User/template";
 
 @import "./components/header";
 @import "./components/section";
@@ -16,4 +18,5 @@
 @import "./components/gridadd";
 @import "./components/gridoption";
 @import "./components/datagrid";
-@import "./components/lineaction"
+@import "./components/lineaction";
+@import "./components/searchbar";

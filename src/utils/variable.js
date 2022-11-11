@@ -10,15 +10,21 @@ const header = object => {
 }
 let j = ""
 
-const fieldParse = (str) =>{
+const fieldParse = (str) => {
     let tmp = str.trim().split(" ")
     tmp[0] = tmp[0].toLowerCase()
     return tmp.join("")
 }
-const fieldInclude = (str) =>{
+const fieldInclude = (str) => {
     let tmp = str.toUpperCase()
-    if(tmp.includes("NAME") || tmp.includes("LECTURER")){
+    if ((tmp.includes("NAME") || tmp.includes("LECTURER")) && !tmp.includes("USER")) {
         return 330
+    }
+    if (tmp.includes("USER")) {
+        return 150
+    }
+    if(tmp.includes("EMAIL")){
+        return 170
     }
     return 100
 }
