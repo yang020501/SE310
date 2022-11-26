@@ -20,6 +20,18 @@ const Course = props => {
     "Email",
     "Option"
   ])
+  const AddStudentHeader = variable([
+    "User Name",
+    "Name",
+    "Email",
+    "Option"
+  ])
+  const ChangeLecturerHeader = variable([
+    "User Name",
+    "Name",
+    "Email",
+    "Option"
+  ])
   const rows = RowCourse
   const openModal = () => setOpen(true)
   const closeModal = () => setOpen(false)
@@ -61,7 +73,7 @@ const Course = props => {
           <SearchBar data={[]} />
         </TemplateModalTitle>
         <TemplateModalBody>
-          <MyDataGrid ColumnHeader={Header} Data={rows} />
+          <MyDataGrid ColumnHeader={AddStudentHeader} Data={rows} />
         </TemplateModalBody>
         <TemplateModalAction
           funcError={closeModal}

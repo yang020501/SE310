@@ -18,10 +18,10 @@ body {
         height: 100%;
     }
     .MuiInputBase-root {
-        color: $txt-third-color;
+        color: black;
     }
     .MuiOutlinedInput-root {
-        color: $txt-third-color;
+        color: black;
         outline: $txt-third-color;
     }
 
@@ -40,6 +40,14 @@ body {
         .MuiButton-root:hover,
         .MuiButton-root {
             background-color: $btn-second-bg;
+        }
+    }
+    .btnPassword {
+        .MuiButton-root:hover,
+        .MuiButton-root {
+            background-color: $main-bg;
+            color: black;
+            border: 1px solid black;
         }
     }
     .MuiDataGrid-columnHeaderTitle {

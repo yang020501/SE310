@@ -10,11 +10,13 @@ import Accounts from "./pages/Admin/Accounts";
 import Courses from "./pages/User/Courses";
 import Course from "./pages/User/Course";
 import Profile from "./pages/User/Profile";
+import Landing from "./pages/Landing";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route index path="/" element={<Landing />} />
         <Route element={<UserLayout />} >
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:id" element={<Course />} />
