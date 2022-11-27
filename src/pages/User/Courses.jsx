@@ -11,81 +11,137 @@ import { useState } from 'react';
 import MyButton from '../../components/MyButton';
 import Input from '@mui/material/Input';
 import Box from '@mui/material/Box';
+import Template, {
+  TemplateTitle, TemplateLineAction, TemplateData,
+  TemplateSearch, TemplateModal, TemplateModalTitle,
+  TemplateModalBody, TemplateModalAction
+} from '../../components/Template';
+import MiniPopup from '../../components/MiniPopup';
 const Courses = props => {
-  const [open, setOpen] = useState(false)
-  const Header = variable([
+  const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
+  const [OpenAddLecturerModal, setOpenAddLecturerModal] = useState(false)
+  const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState(false)
+  const headers = variable([
     "Id",
     "Code",
     "Class Name",
     "Lecturer",
     "Option"
   ])
-  const rows = Rows
-  const openModal = () => setOpen(true)
-  const closeModal = () => setOpen(false)
+  const rows = [{
+    code: "SE110",
+    className: "Object Oriented Analysis and Design",
+    lecturer: () => setOpenAddLecturerModal(true),
+    option: () => setOpenMiniPopupCourses(true)
+  },
+  {
+    code: "SE111",
+    className: "Object Oriented Analysis and Design",
+    lecturer: "Nguyễn Hoàng Thái Dương",
+    option: () => setOpenMiniPopupCourses(true)
+  },
+  {
+    code: "SE132",
+    className: "Object Oriented Analysis and Design",
+    lecturer: () => setOpenAddLecturerModal(true),
+    option: () => setOpenMiniPopupCourses(true)
+  },
+  {
+    code: "SE105",
+    className: "Object Oriented Analysis and Design",
+    lecturer: "Nguyễn Hoàng Thái Dương",
+    option: () => setOpenMiniPopupCourses(true)
+  }]
+  const openCreateCourseModal = () => setOpenCreateCourseModal(true)
+  const closeCreateCourseModal = () => setOpenCreateCourseModal(false)
+  const openAddLecturerModal = () => setOpenAddLecturerModal(true)
+  const closeAddLecturerModal = () => setOpenAddLecturerModal(false)
 
-
-  const handleCreate = (event) => {
+  const handleCreateCourse = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
   }
   return (
-    <div className="courses">
-      <div className='courses-search'>
+    <Template>
+      <TemplateSearch>
         <SearchBar />
-      </div>
-      <div className='courses-lineaction' onClick={openModal}>
-        <LineAction name={"Create a course"} />
-      </div>
-      <div className='courses-datagrid'>
-        <MyDataGrid ColumnHeader={Header} Data={rows} />
-      </div>
-
-      <Modal open={open}
-        // onClose={closeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+      </TemplateSearch>
+      <TemplateTitle>SE100</TemplateTitle>
+      <TemplateLineAction>
+        <LineAction
+          name={"Create a course"}
+          click={openCreateCourseModal}
+        />
+      </TemplateLineAction>
+      <TemplateData>
+        <MyDataGrid ColumnHeader={headers} Data={rows} />
+        <MiniPopup
+          open={OpenMiniPopupCourses}
+          close={() => setOpenMiniPopupCourses(false)}
+          actions={[
+            {
+              name: "Add a student",
+              click: null
+            },
+            {
+              name: "Manage student",
+              click: null
+            },
+            {
+              name: "Remove lecturer",
+              click: null
+            }
+          ]}
+        />
+      </TemplateData>
+      <TemplateModal
+        open={OpenCreateCourseModal}
+        size="sm"
+        form={true}
+        onsubmit={handleCreateCourse}
       >
-        <div className='courses-modal'>
-          <div className='courses-modal-content'>
-            <Box component="form" onSubmit={handleCreate} >
-              <div className="courses-modal-content-title">
-                <p> Create new course:</p>
-                <Divider variant="middle" />
+        <TemplateModalTitle>
+          <p> Create new course:</p>
+          <Divider variant="middle" />
+        </TemplateModalTitle>
+        <TemplateModalBody >
+          <div className="courses-modal-content-field">
+            <div className="courses-modal-content-field-content">
+              <div className="courses-modal-content-field-content-label" >
+                Enter course code:
               </div>
-              <div className="courses-modal-content-field">
-                <div className="courses-modal-content-field-content">
-                  <div className="courses-modal-content-field-content-label" >
-                    Enter course code:
-                  </div>
-                  <div className="courses-modal-content-field-content-input" >
-                    <Input required />
-                  </div>
-                </div>
-                <div className="courses-modal-content-field-content">
-                  <div className="courses-modal-content-field-content-label" >
-                    Enter course name:
-                  </div>
-                  <div className="courses-modal-content-field-content-input" >
-                    <Input required />
-                  </div>
-                </div>
-                <Divider variant="middle" />
+              <div className="courses-modal-content-field-content-input" >
+                <Input required />
               </div>
-              <div className="courses-modal-content-action">
-                <div className="courses-modal-content-action-btn pulse">
-                  <MyButton type="submit">Create</MyButton>
-                </div>
-                <div className="courses-modal-content-action-btn btnError  ">
-                  <MyButton type="button" onclick={closeModal}>Cancel</MyButton>
-                </div>
+            </div>
+            <div className="courses-modal-content-field-content">
+              <div className="courses-modal-content-field-content-label" >
+                Enter course name:
               </div>
-            </Box>
+              <div className="courses-modal-content-field-content-input" >
+                <Input required />
+              </div>
+            </div>
+            <Divider variant="middle" />
           </div>
-        </div>
-      </Modal >
-    </div >
+        </TemplateModalBody>
+        <TemplateModalAction funcError={closeCreateCourseModal} size="sm" />
+      </TemplateModal>
+      <TemplateModal
+        open={OpenAddLecturerModal}
+        size="lg"
+        form={false}
+      >
+        <TemplateModalTitle>
+
+        </TemplateModalTitle>
+        <TemplateModalBody >
+          <MyDataGrid ColumnHeader={headers} />
+        </TemplateModalBody>
+        <TemplateModalAction funcError={closeAddLecturerModal} size="lg" />
+      </TemplateModal>
+    </Template>
   )
 }
 

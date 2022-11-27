@@ -11,8 +11,10 @@ import Template, {
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
+import MiniPopup from '../../components/MiniPopup';
 const Course = props => {
   const [open, setOpen] = useState(false)
+  const [OpenMiniPopupCourse, setOpenMiniPopupCourse] = useState(false)
   const Header = variable([
     "Id",
     "User Name",
@@ -32,10 +34,34 @@ const Course = props => {
     "Email",
     "Option"
   ])
-  const rows = RowCourse
+  const rows = [
+    {
+      userName: "20521865",
+      name: "Ha Gia Dong",
+      email: "ww34324sxcscwww@gmail.com",
+      option: () => { setOpenMiniPopupCourse(true) }
+    },
+    {
+      userName: "18521865",
+      name: "Truong Phat Thinh",
+      email: "wwwew1123ww@gmail.com",
+      option: () => { setOpenMiniPopupCourse(true) }
+    },
+    {
+      userName: "19521433",
+      name: "Ngo Tat To",
+      email: "sajdkajsasdwqhd@gmail.com",
+      option: () => { setOpenMiniPopupCourse(true) }
+    },
+    {
+      userName: "19521239",
+      name: "Hoang Thuy Linh",
+      email: "saj123232dkajshd@gmail.com",
+      option: () => { setOpenMiniPopupCourse(true) }
+    }
+  ]
   const openModal = () => setOpen(true)
   const closeModal = () => setOpen(false)
-  console.log(open);
 
   const handleCreate = () => {
     // event.preventDefault()
@@ -63,6 +89,24 @@ const Course = props => {
       </TemplateLineAction>
       <TemplateData>
         <MyDataGrid ColumnHeader={Header} Data={rows} />
+        <MiniPopup
+          open={OpenMiniPopupCourse}
+          close={() => setOpenMiniPopupCourse(false)}
+          actions={[
+            {
+              name: "Add a student",
+              click: null
+            },
+            {
+              name: "Manage student",
+              click: null
+            },
+            {
+              name: "Remove lecturer",
+              click: null
+            }
+          ]}
+        />
       </TemplateData>
       <TemplateModal
         open={open}

@@ -7,7 +7,6 @@ const DataGridOptions = props => {
         <button>
             <div className="gridoption" onClick={props.click ? props.click : null}>
                 <MoreHorizIcon />
-
             </div>
         </button>
 

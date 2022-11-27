@@ -34,7 +34,9 @@ export const TemplateLineAction = props => {
 export const TemplateData = props => {
     return (
         <div className='template-data'>
-            {props.children}
+            <div className="template-data-container">
+                {props.children}
+            </div>
         </div>
     )
 }
@@ -77,7 +79,7 @@ TemplateModal.propsType = {
 }
 export const TemplateModalTitle = props => {
     return (
-        <div className="course-modal-content-title">
+        <div className="template-modal-content-title">
             {
                 props.children
             }
@@ -86,7 +88,7 @@ export const TemplateModalTitle = props => {
 }
 export const TemplateModalBody = props => {
     return (
-        <div className="course-modal-content-body">
+        <div className="template-modal-content-body">
             {
                 props.children
             }
@@ -95,11 +97,11 @@ export const TemplateModalBody = props => {
 }
 export const TemplateModalAction = props => {
     return (
-        <div className="course-modal-content-action">
-            <div className={`course-modal-content-action-btn ${props.size}`}>
+        <div className="template-modal-content-action">
+            <div className={`course-modal-content-action-btn pulse ${props.size}`}>
                 <MyButton type="submit" >Create</MyButton>
             </div>
-            <div className={`course-modal-content-action-btn btnError ${props.size}`}>
+            <div className={`template-modal-content-action-btn btnError ${props.size}`}>
                 <MyButton type="button" onclick={props.funcError}>Cancel</MyButton>
             </div>
         </div>

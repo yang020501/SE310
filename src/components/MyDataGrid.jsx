@@ -5,23 +5,23 @@ import DataGridOptions from './DataGridOptions'
 import DataGridAdd from './DataGridAdd'
 import useMousePosition from '../utils/mousePosition'
 const MyDataGrid = props => {
-    const mousePosition = useMousePosition()
-    const dataGridFunctionRef = useRef(null)
+    // const mousePosition = useMousePosition()
+    // const dataGridFunctionRef = useRef(null)
     const [pageSize, setPageSize] = React.useState(5);
 
-    const closeOptionMenu = () => {
-        let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
-        if (!(valid.value === "gridoption")) {
-            dataGridFunctionRef.current.classList.remove('show')
-            window.removeEventListener('click', closeOptionMenu)
-        }
-    }
-    const openOptionMenu = () => {
-        dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
-        dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-        dataGridFunctionRef.current.classList.add('show')
-        window.addEventListener('click', closeOptionMenu)
-    }
+    // const closeOptionMenu = () => {
+    //     let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
+    //     if (!(valid.value === "gridoption")) {
+    //         dataGridFunctionRef.current.classList.remove('show')
+    //         window.removeEventListener('click', closeOptionMenu)
+    //     }
+    // }
+    // const openOptionMenu = () => {
+    //     dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
+    //     dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
+    //     dataGridFunctionRef.current.classList.add('show')
+    //     window.addEventListener('click', closeOptionMenu)
+    // }
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
@@ -31,10 +31,17 @@ const MyDataGrid = props => {
                 headerAlign: 'center',
                 align: 'center',
                 renderCell: (params) => {
-                    if (params.field === "lecturer")
-                        return params.value ? params.value : (<DataGridAdd />)
+                    if (params.field === "lecturer") {
+                        if (params.value) {
+                            if (typeof (params.value) === "function")
+                                return (<DataGridAdd click={params.row.lecturer} />)
+                            else
+                                return params.value
+                        }
+                    }
                     else if (params.field === "option")
-                        return (<DataGridOptions click={openOptionMenu} />)
+                        return (<DataGridOptions click={params.row.option} />)
+
                 }
 
             }
@@ -57,7 +64,7 @@ const MyDataGrid = props => {
 
 
     return (
-        <div className="datagrid">
+        <React.Fragment>
             <DataGrid
                 // density='comfortable'
                 autoHeight
@@ -70,7 +77,7 @@ const MyDataGrid = props => {
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
             />
-            <div className="datagrid-function" ref={dataGridFunctionRef}>
+            {/* <div className="datagrid-function" ref={dataGridFunctionRef}>
                 <div className="datagrid-function-item">
                     Add a Student
                 </div>
@@ -80,8 +87,9 @@ const MyDataGrid = props => {
                 <div className="datagrid-function-item">
                     Remove lecturer
                 </div>
-            </div>
-        </div>
+            </div> */}
+
+        </React.Fragment>
 
     )
 }

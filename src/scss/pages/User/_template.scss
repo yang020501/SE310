@@ -20,6 +20,12 @@
         text-align: center;
         padding: 0.75rem;
     }
+    &-data {
+        &-container {
+            width: 90%;
+            margin: auto;
+        }
+    }
     &-modal {
         @include flex(center, center);
         position: absolute;
@@ -66,7 +72,7 @@
             }
             &-action {
                 @include flex(center, center);
-                margin-top: 50px;
+                margin-top: 30px;
                 height: 25px;
                 column-gap: 10%;
                 &-btn {
