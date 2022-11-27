@@ -5,6 +5,7 @@
     @include mobile {
         flex-direction: column;
         height: max-content;
+     
     }
     &-item {
         width: 100%;
@@ -12,7 +13,8 @@
 
         .image-container {
             position: relative;
-            height: 50%;
+            height: 60%;
+            width: 90%;
             border-radius: $border-radius;
             background-color: rgba(0, 0, 0, 0.03);
 
@@ -99,5 +101,9 @@
         @include flex(center, center);
         flex-direction: column;
         row-gap: 10px;
+        margin-right: 80px;
+        @include mobile{
+            margin: 0;
+        }
     }
 }

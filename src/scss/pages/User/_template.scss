@@ -1,11 +1,16 @@
 .template {
-    @include flex(center, center);
+    @include flex(flex-start, center);
     flex-direction: column;
     height: 100%;
-
-    &-datagrid,
-    &-search,
+    &-title,
     &-lineaction {
+        // width: 100%;
+        margin-left: 3rem;
+        text-align: start;
+        padding: 0.5rem 3rem;
+    }
+    &-data,
+    &-search {
         width: 100%;
     }
     &-lineaction {
@@ -68,11 +73,10 @@
                     &.lg {
                         width: 15%;
                     }
-                
+
                     width: 30%;
                     height: 100%;
                 }
-                
             }
         }
     }

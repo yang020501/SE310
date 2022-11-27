@@ -6,6 +6,9 @@
     column-gap: 8px;
     cursor: pointer;
     &-icon {
-        padding-top: 5px;
+        // padding-top: 5px;
+    
+        @include flex(center, center);
+        height: 100%;
     }
 }

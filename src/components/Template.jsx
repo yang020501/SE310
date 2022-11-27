@@ -31,9 +31,9 @@ export const TemplateLineAction = props => {
         </div>
     )
 }
-export const TemplateDataGrid = props => {
+export const TemplateData = props => {
     return (
-        <div className='template-datagrid'>
+        <div className='template-data'>
             {props.children}
         </div>
     )

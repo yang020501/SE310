@@ -11,6 +11,8 @@ import Courses from "./pages/User/Courses";
 import Course from "./pages/User/Course";
 import Profile from "./pages/User/Profile";
 import Landing from "./pages/Landing";
+import Class from "./pages/User/Class";
+import Classes from "./pages/User/Classes";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/courses/:id" element={<Course />} />
           <Route path="/profile/" element={<Profile />} />
           <Route path="/admin" element={<Accounts />} />
+          <Route path="/classes" element={<Classes />} />
+          <Route path="/classes/:id" element={<Class />} />
         </Route>
         <Route element={<AuthLayout />} >
           <Route path="/register" element={<Register />} />

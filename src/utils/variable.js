@@ -24,7 +24,7 @@ const fieldInclude = (str) => {
         return 150
     }
     if(tmp.includes("EMAIL")){
-        return 170
+        return 330
     }
     return 100
 }

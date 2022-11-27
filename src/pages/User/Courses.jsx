@@ -74,10 +74,10 @@ const Courses = props => {
                 <Divider variant="middle" />
               </div>
               <div className="courses-modal-content-action">
-                <div className="courses-modal-content-action-btn">
+                <div className="courses-modal-content-action-btn pulse">
                   <MyButton type="submit">Create</MyButton>
                 </div>
-                <div className="courses-modal-content-action-btn btnError">
+                <div className="courses-modal-content-action-btn btnError  ">
                   <MyButton type="button" onclick={closeModal}>Cancel</MyButton>
                 </div>
               </div>

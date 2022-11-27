@@ -28,6 +28,24 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 
 $item-hover: rgba(0, 0, 0, 0.04);
 
-$border-radius : 5px;
+$border-radius: 5px;
 
+$colors: (
+    // fill: #a972cb,
+    pulse: #0096c7,
+    btnError: $btn-second-bg
+    // close: #ff7f82,
+    // raise: #ffa260,
+    // up: #e4cb58,
+    // slide: #8fc866,
+    // offset: #19bc8b,
+);
 
+// Sass variables compile to a static string; CSS variables are dynamic and inherited
+// Loop through the map and set CSS custom properties using Sass variables
+@each $button, $color in $colors {
+    .#{$button} {
+        --color: #{$color};
+        --hover: #{adjust-hue($color, 0deg)};
+    }
+}

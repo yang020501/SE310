@@ -4,42 +4,33 @@ import Template, {
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
-import MyDataGrid from '../../components/MyDataGrid'
 import SearchBar from '../../components/SearchBar';
 import LineAction from '../../components/LineAction';
-
-const Accounts = () => {
+import ClassBlock from '../../components/ClassBlock';
+const Class = () => {
+  const count = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
   return (
     <Template>
       <TemplateSearch>
         <SearchBar />
       </TemplateSearch>
+      <TemplateTitle>SE100 - Object Oreienetdf sddasdasdadsadasdsad</TemplateTitle>
       <TemplateLineAction>
         <LineAction
-          name={"Create an account"}
-
+          name={"New block"}
+        // click={openModal}
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid />
+        {
+          count.map((item, index) => {
+            return <ClassBlock  key={index} name={`Let ${index +1} - Hafasdkdsakjhdkasjhdhkjashdsjakd`}/>
+          })
+        }
+
       </TemplateData>
-      <TemplateModal
-        // open={open}
-        size="lg"
-        form={false}
-      >
-        <TemplateModalTitle>
-          <SearchBar data={[]} />
-        </TemplateModalTitle>
-        <TemplateModalBody>
-          <MyDataGrid />
-        </TemplateModalBody>
-        <TemplateModalAction
-          size="lg"
-        />
-      </TemplateModal>
     </Template>
   )
 }
 
-export default Accounts
+export default Class

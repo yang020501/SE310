@@ -7,7 +7,7 @@ import LineAction from '../../components/LineAction';
 import { useState } from 'react';
 import RowCourse from "../../asset/temp/Course"
 import Template, {
-  TemplateTitle, TemplateLineAction, TemplateDataGrid,
+  TemplateTitle, TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
@@ -61,9 +61,9 @@ const Course = props => {
           click={openModal}
         />
       </TemplateLineAction>
-      <TemplateDataGrid>
+      <TemplateData>
         <MyDataGrid ColumnHeader={Header} Data={rows} />
-      </TemplateDataGrid>
+      </TemplateData>
       <TemplateModal
         open={open}
         size="lg"
