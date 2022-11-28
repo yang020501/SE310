@@ -10,6 +10,10 @@ import { Link } from 'react-router-dom'
 const NavbarHeader = props => {
     const menuRef = useRef(null);
     const iconRef = useRef(null);
+
+    const LogOut = () =>{
+        
+    }
     const closeSideMenu = () => {
         // let valid = iconRef.current.activeElement
         // if (!(valid.value === "gridoption")) {
@@ -47,14 +51,14 @@ const NavbarHeader = props => {
                             Nguyen Hoang Thai Duong
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item">
-                            <Link>
+                            <Link to={"/profile"}>
                                 <SettingsIcon style={{ width: "24px" }} />
                                 Profile Settings
                             </Link>
 
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item" >
-                            <Link to={"/login"}>
+                            <Link to={"/login"} onClick={LogOut}>
                                 <LogoutIcon />
                                 Log Out
                             </Link>
@@ -65,12 +69,12 @@ const NavbarHeader = props => {
                     </div>
                     <div className="navbarheader-side-sidemenu-body">
                         <div className="navbarheader-side-sidemenu-body-item">
-                            <Link to={"/"}>
+                            <Link to={"/admin"}>
                                 Dashboard
                             </Link>
                         </div>
                         <div className="navbarheader-side-sidemenu-body-item">
-                            <Link to={"/login"}>
+                            <Link to={"/courses"}>
                                 Courses
                             </Link>
                         </div>
