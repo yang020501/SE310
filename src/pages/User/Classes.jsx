@@ -11,25 +11,12 @@ import Template, {
 import { Grid } from '@mui/material';
 import ClassCard from '../../components/ClassCard';
 import useMousePosition from '../../utils/mousePosition'
+import MiniPopup from '../../components/MiniPopup';
 
 const Classes = () => {
-    const dataGridFunctionRef = useRef(null)
-    const mousePosition = useMousePosition()
-    const closeOptionMenu = () => {
 
-        let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
-        if (!(valid.value === "gridoption")) {
-            dataGridFunctionRef.current.classList.remove('show')
-            window.removeEventListener('click', closeOptionMenu)
-        }
+    const [OpenMiniPopupClasses, setOpenMiniPopupClasses] = useState(false)
 
-    }
-    const openOptionMenu = () => {
-        dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
-        dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-        dataGridFunctionRef.current.classList.add('show')
-        window.addEventListener('click', closeOptionMenu)
-    }
     return (
         <Template>
             <TemplateSearch>
@@ -44,47 +31,50 @@ const Classes = () => {
                 />
             </TemplateLineAction>
             <TemplateData>
-                <div className='datagrid'>
 
-                    <Grid container spacing={2} >
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" optionclick={openOptionMenu} />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
-                        <Grid item lg={3}>
-                            <ClassCard name="Nguyen haong Thai Duong" />
-                        </Grid>
+                <Grid container spacing={2} >
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" optionclick={() => { setOpenMiniPopupClasses(true) }} />
                     </Grid>
-                    <div className="datagrid-function" ref={dataGridFunctionRef}>
-                        <div className="datagrid-function-item">
-                            Add a Student
-                        </div>
-                        <div className="datagrid-function-item">
-                            Manage students
-                        </div>
-                        <div className="datagrid-function-item">
-                            Remove lecturer
-                        </div>
-                    </div>
-
-                </div>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                    <Grid item lg={3}>
+                        <ClassCard name="Nguyen haong Thai Duong" />
+                    </Grid>
+                </Grid>
+                <MiniPopup
+                    open={OpenMiniPopupClasses}
+                    close={() => setOpenMiniPopupClasses(false)}
+                    actions={[
+                        {
+                            name: "Add a student",
+                            click: null
+                        },
+                        {
+                            name: "Manage student",
+                            click: null
+                        },
+                        {
+                            name: "Remove lecturer",
+                            click: null
+                        }
+                    ]} />
             </TemplateData>
         </Template>
     )

@@ -13,6 +13,7 @@ import Profile from "./pages/User/Profile";
 import Landing from "./pages/Landing";
 import Class from "./pages/User/Class";
 import Classes from "./pages/User/Classes";
+import ClassDetail from "./pages/User/ClassDetail";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/admin" element={<Accounts />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/classes/:id" element={<Class />} />
+          <Route path="/classes/:id/:id" element={<ClassDetail/>} />
         </Route>
         <Route element={<AuthLayout />} >
           <Route path="/register" element={<Register />} />
