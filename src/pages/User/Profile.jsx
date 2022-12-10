@@ -15,7 +15,6 @@ const Profile = () => {
 
     const onChange = (e) => {
         var file = e.target.files
-
         if (FileReader && file && file.length) {
             var fr = new FileReader();
             fr.onload = function () {

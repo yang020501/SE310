@@ -17,7 +17,6 @@ const AdminLayout = () => {
                         <Block >
                             <MyBreadcrums />
                         </Block>
-
                     </SectionTitle>
                     <SectionBody>
                         <Grid container spacing={1}   >
