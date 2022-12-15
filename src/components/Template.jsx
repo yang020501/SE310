@@ -98,11 +98,11 @@ export const TemplateModalBody = props => {
 export const TemplateModalAction = props => {
     return (
         <div className="template-modal-content-action">
-            <div className={`course-modal-content-action-btn pulse ${props.size}`}>
+            <div className={`template-modal-content-action-btn  ${props.size}`}>
                 <MyButton type="submit" >Create</MyButton>
             </div>
-            <div className={`template-modal-content-action-btn btnError ${props.size}`}>
-                <MyButton type="button" onclick={props.funcError}>Cancel</MyButton>
+            <div className={`template-modal-content-action-btn  ${props.size}`}>
+                <MyButton btnType="btnError" type="button" onclick={props.funcError}>Cancel</MyButton>
             </div>
         </div>
     )

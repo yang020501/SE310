@@ -6,14 +6,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar } from '@mui/material';
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/user/userSlice';
 
 const NavbarHeader = props => {
+    let dispatch = useDispatch()
     const menuRef = useRef(null);
     const iconRef = useRef(null);
 
-    const LogOut = () =>{
-        
-    }
+
     const closeSideMenu = () => {
         // let valid = iconRef.current.activeElement
         // if (!(valid.value === "gridoption")) {
@@ -58,7 +59,7 @@ const NavbarHeader = props => {
 
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item" >
-                            <Link to={"/login"} onClick={LogOut}>
+                            <Link to={"/login"} onClick={() => { dispatch(logout()) }}>
                                 <LogoutIcon />
                                 Log Out
                             </Link>

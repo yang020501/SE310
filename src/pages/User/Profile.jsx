@@ -7,10 +7,18 @@ import { Avatar } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import MyButton from '../../components/MyButton';
 import { useRef } from 'react';
+import { useFetchUser } from '../../redux/user/hook';
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react';
 
 const Profile = () => {
+    useFetchUser()
+
+    const userValue = useSelector(state => state.userState.value)
     const pictureRef = useRef(null)
+    
     const [open, setOpen] = useState(false)
+    const { fullName, email } = userValue
     const uploadPicture = () => pictureRef.current.click()
 
     const onChange = (e) => {
@@ -30,10 +38,12 @@ const Profile = () => {
         event.preventDefault()
         event.stopPropagation()
     }
+    useEffect(() => {
+        // setUserForm = ({ ...userValue })
+    }, [userValue])
     return (
 
         <div className='profile'>
-
             <div className="profile-item">
                 <div className='image-container'>
                     <div className="hover" onClick={uploadPicture}>
@@ -59,7 +69,7 @@ const Profile = () => {
                     <div className="profile-item-right-fields">
                         <div className="profile-item-right-fields-block">
                             <div className='label'>Full name:</div>
-                            <TextField className='input' fullWidth size='small' placeholder='name' name='name' />
+                            <TextField className='input' fullWidth size='small' name='fullName' value={fullName} />
                             <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                         </div>
                         <div className="profile-item-right-fields-block btnPassword">
@@ -77,12 +87,12 @@ const Profile = () => {
                         </div>
                         <div className="profile-item-right-fields-block">
                             <div className='label'>Email:</div>
-                            <TextField className='input' type="email" fullWidth size='small' placeholder='name' name='mail' />
+                            <TextField className='input' type="email" fullWidth size='small' name='email' value={email} />
                             <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                         </div>
                     </div>
                     <div className="profile-item-right-btn">
-                        <MyButton>Update</MyButton>
+                        <MyButton >Update</MyButton>
                     </div>
                 </div>
             </div>

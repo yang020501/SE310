@@ -1,21 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 import userApi from "../../api/userAPI";
 
 const user = localStorage.getItem('user') !== null ? JSON.parse(localStorage.getItem('user')) : null
-const token = localStorage.getItem('token') !== null ? JSON.parse(localStorage.getItem('token')) : null
 
 
 export const login = createAsyncThunk(
     'user/login',
     async (data, { rejectWithValue }) => {
 
-        const rs = await userApi.login(data)
-        const res_data = await rs.data
+        const rs = await userApi.login(data).catch(data => { return data.response })
 
         if (rs.status < 200 || rs.status >= 300) {
-            return rejectWithValue(res_data);
+            return rejectWithValue(rs.data);
         }
-        return res_data
+        return rs.data
     }
 )
 export const register = createAsyncThunk(
@@ -31,11 +30,11 @@ export const register = createAsyncThunk(
         return res_data
     }
 )
-export const editUser = createAsyncThunk(
-    'user/edituser',
+export const updateUser = createAsyncThunk(
+    'user/updateuser',
     async (data, { rejectWithValue }) => {
 
-        const rs = await userApi.editUser(data.id,data.body)
+        const rs = await userApi.updateUser(data.id, data.body)
         const res_data = await rs.data
 
         if (rs.status < 200 || rs.status >= 300) {
@@ -44,11 +43,23 @@ export const editUser = createAsyncThunk(
         return res_data
     }
 )
+export const fetchUser = createAsyncThunk(
+    'user/fetchuser',
+    async (data, { rejectWithValue }) => {
+
+        const rs = await userApi.fetchUser().catch(data => { return data.response })
+
+        if (rs.status < 200 || rs.status >= 300) {
+            return rejectWithValue(rs.data);
+        }
+        return rs.data
+    }
+)
 const initialState = {
     loading: false,
     user: user,
-    token: token,
-    err: "",
+    value: {},
+    err: null,
 }
 
 
@@ -56,29 +67,32 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setToken: (state, action) => {
-            state.token = action.payload
-        },
         setUser: (state, action) => {
             state.user = action.payload
+        },
+        logout: (state) => {
+            state.user = null
+            localStorage.removeItem('user')
+        },
+        updateUserValue: (state,action) =>{
+            state.value = action.payload
         }
     },
     extraReducers: (builder) => {
         builder.addCase(login.pending, state => {
-            state.loading = true;
+            state.loading = true
         })
         builder.addCase(login.fulfilled, (state, action) => {
             state.loading = false
+            state.user = action.payload
+            state.err = null
+            localStorage.setItem('user', JSON.stringify(action.payload))
+           
 
-            state.user = action.payload.user
-            state.token = action.payload.token
-
-            localStorage.setItem('user', JSON.stringify(action.payload.user))
-            localStorage.setItem('token', JSON.stringify(action.payload.token))
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
-            state.err = action.payload.message
+            state.err = action.payload.status === 401 ? "Username or Password incorrect!" : action.payload.status === 500 ? "Fail to connect to Server!" : "Error!"
         })
         builder.addCase(register.pending, state => {
             state.loading = true;
@@ -88,15 +102,28 @@ const userSlice = createSlice({
         })
         builder.addCase(register.rejected, (state, action) => {
             state.loading = false;
-            state.err = action.payload.message
+            state.err = action.payload.title
         })
-        
+        builder.addCase(fetchUser.pending, state => {
+            state.loading = true;
+        })
+        builder.addCase(fetchUser.fulfilled, (state, action) => {
+            state.loading = false
+            state.value = action.payload
+
+        })
+        builder.addCase(fetchUser.rejected, (state, action) => {
+            state.loading = false;
+            state.err = action.payload.title
+        })
+
     }
 })
 
 export const {
-    setToken,
-    setUser
+    setUser,
+    logout,
+    updateUserValue
 } = userSlice.actions
 
 export default userSlice.reducer

@@ -6,6 +6,7 @@ const MyButton = props => {
 
     return (
         <Button
+            className={`pulse ${props.btnType ? props.btnType : ""}`}
             type={props.type ? props.type : ''}
             fullWidth={props.fullWidth ? true : false}
             size={props.size ? props.size : ''}
@@ -26,7 +27,8 @@ Button.propTypes = {
     // icon: PropTypes.string,
     // animate: PropTypes.bool,
     onclick: PropTypes.func,
-    fullWidth: PropTypes.bool
+    fullWidth: PropTypes.bool,
+    btnType : PropTypes.string
 }
 
 export default MyButton

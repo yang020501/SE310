@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import MarkdownEditor from '@uiw/react-markdown-editor';
 
@@ -8,12 +8,12 @@ import Template, {
     TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import onImagePasted from '../../utils/onImagePasted'
-import dataURItoBlob from '../../utils/dataURItoBlob';
-import { useEffect } from 'react';
+
 
 const ClassDetail = props => {
     const [value, setValue] = useState("")
-    const [url, setUrl] = useState("")
+    const [valueImage, setValueImage] = useState("")
+    const values = ""
     const onChange = (e) => {
         setValue(e)
     }
@@ -36,6 +36,7 @@ const ClassDetail = props => {
                 var fr = new FileReader();
                 fr.onload = function () {
                     onImagePasted(fr.result, setValue)
+
                 }
                 fr.readAsDataURL(file[0]);
             }
@@ -52,7 +53,6 @@ const ClassDetail = props => {
     }
     const Paste = (e) => {
         e.preventDefault();
-        console.log(e.clipboardData.files);
         var file = e.clipboardData.files
 
         if (FileReader && file) {
@@ -63,6 +63,10 @@ const ClassDetail = props => {
             fr.readAsDataURL(file[0]);
         }
     }
+    console.log(value);
+    // useEffect(() => {
+    //     setValue("")
+    // }, [])
     return (
         <Template>
             <div className="classdetail-title">
@@ -75,10 +79,10 @@ const ClassDetail = props => {
                     <MarkdownEditor
                         draggable={true}
                         id="textareamd"
-                        value={value}
+                        // value={value}
                         visible
                         height='480px'
-                        onChange={onChange}
+                        // onChange={onChange}
 
                         // onPaste={async (event) => {
                         //     await onImagePasted(event.clipboardData, setValue);
