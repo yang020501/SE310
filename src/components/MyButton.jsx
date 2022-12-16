@@ -7,7 +7,7 @@ const MyButton = props => {
     return (
         <Button
             className={`pulse ${props.btnType ? props.btnType : ""}`}
-            type={props.type ? props.type : ''}
+            type={props.type ? props.type : 'button'}
             fullWidth={props.fullWidth ? true : false}
             size={props.size ? props.size : ''}
             onClick={props.onclick ? () => props.onclick() : null}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, Navigate } from 'react-router-dom'
+import MySnackbar from '../components/MySnackbar'
 import NavbarHeader from '../components/NavbarHeader'
 
 const ProtectedRoute = () => {
@@ -16,6 +17,7 @@ const ProtectedRoute = () => {
                         </div>
                     </div>
                 </div>
+                <MySnackbar />
             </React.Fragment>
             :
             <Navigate to='/login' />

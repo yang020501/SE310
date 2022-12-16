@@ -1,20 +1,20 @@
 import axiosClient from "./axiosClient"
 import { API_BASE_URL } from '../config/index'
 const userApi = {
-    fetchUser: (token) => {
+    fetchUser: () => {
         const url = `/api/user/info`
         return axiosClient.get(url)
     },
-    getAllUsers: () => {
-        const url = "/user/getAll"
-        return axiosClient.get(url)
+    changePasswordUser: (body) => {
+        const url = `/api/user/info/change-password`
+        return axiosClient.patch(url, { ...body })
     },
     postUser: (body) => {
         const url = '/user'
         return axiosClient.post(url, { ...body })
     },
-    editUser: (id, body) => {
-        const url = `/user/${id}`
+    updateUser: (body) => {
+        const url = `/api/user/info/update-info`
         return axiosClient.patch(url, { ...body })
     },
     deleteUser: (id) => {
@@ -23,10 +23,10 @@ const userApi = {
     },
     login: (body) => {
         const url = `/api/auth/login`
-        return axiosClient.post(url, {...body})
+        return axiosClient.post(url, { ...body })
     },
     register: (body) => {
-        const url = '/user/register'
+        const url = '/api/auth/register'
         return axiosClient.post(url, { ...body })
     }
 }

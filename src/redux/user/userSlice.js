@@ -34,13 +34,12 @@ export const updateUser = createAsyncThunk(
     'user/updateuser',
     async (data, { rejectWithValue }) => {
 
-        const rs = await userApi.updateUser(data.id, data.body)
-        const res_data = await rs.data
+        const rs = await userApi.updateUser(data).catch(data => { return data.response })
 
         if (rs.status < 200 || rs.status >= 300) {
-            return rejectWithValue(res_data);
+            return rejectWithValue(rs.data);
         }
-        return res_data
+        return rs.data
     }
 )
 export const fetchUser = createAsyncThunk(
@@ -72,9 +71,11 @@ const userSlice = createSlice({
         },
         logout: (state) => {
             state.user = null
+            state.value = {}
+            state.err = null
             localStorage.removeItem('user')
         },
-        updateUserValue: (state,action) =>{
+        updateUserValue: (state, action) => {
             state.value = action.payload
         }
     },
@@ -87,22 +88,11 @@ const userSlice = createSlice({
             state.user = action.payload
             state.err = null
             localStorage.setItem('user', JSON.stringify(action.payload))
-           
 
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
             state.err = action.payload.status === 401 ? "Username or Password incorrect!" : action.payload.status === 500 ? "Fail to connect to Server!" : "Error!"
-        })
-        builder.addCase(register.pending, state => {
-            state.loading = true;
-        })
-        builder.addCase(register.fulfilled, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(register.rejected, (state, action) => {
-            state.loading = false;
-            state.err = action.payload.title
         })
         builder.addCase(fetchUser.pending, state => {
             state.loading = true;
@@ -116,6 +106,7 @@ const userSlice = createSlice({
             state.loading = false;
             state.err = action.payload.title
         })
+
 
     }
 })
