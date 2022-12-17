@@ -1,26 +1,34 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import MyDataGrid from '../../components/MyDataGrid'
 import SearchBar from '../../components/SearchBar';
-import Rows from '../../asset/temp/Courses'
 import variable from '../../utils/variable'
 import LineAction from '../../components/LineAction';
-import Modal from '@mui/material/Modal';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 import MyButton from '../../components/MyButton';
 import Input from '@mui/material/Input';
-import Box from '@mui/material/Box';
 import Template, {
   TemplateTitle, TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
+import courseApi from '../../api/courseAPI';
+import { useDispatch } from 'react-redux';
+import notifyMessage from '../../utils/NotifyMessage';
+import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 const Courses = props => {
+  const initialCourseForm = {
+    coursename: "",
+    lecturerUserName: "",
+    coursecode: ""
+  }
+  let dispatch = useDispatch()
   const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
   const [OpenAddLecturerModal, setOpenAddLecturerModal] = useState(false)
   const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState(false)
+  const [courseForm, setCourseForm] = useState(initialCourseForm)
+  const { coursename, coursecode, lecturerUserName } = courseForm
   const headers = variable([
     "Id",
     "Code",
@@ -56,18 +64,32 @@ const Courses = props => {
   const closeCreateCourseModal = () => setOpenCreateCourseModal(false)
   const openAddLecturerModal = () => setOpenAddLecturerModal(true)
   const closeAddLecturerModal = () => setOpenAddLecturerModal(false)
-
-  const handleCreateCourse = (event) => {
+  const onCourseFormChange = (e) => {
+    setCourseForm({
+      ...courseForm,
+      [e.target.name]: e.target.value
+    })
+  }
+  const handleCreateCourse = async (event) => {
     event.preventDefault()
     event.stopPropagation()
-
+    if (window.confirm("Create course?")) {
+      let rs = await courseApi.createCourse(courseForm).catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("course")))
+        setCourseForm(initialCourseForm)
+        setOpenCreateCourseModal(false)
+      }
+      else {
+        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course")))
+      }
+    }
   }
   return (
     <Template>
       <TemplateSearch>
         <SearchBar />
       </TemplateSearch>
-      <TemplateTitle>SE100</TemplateTitle>
       <TemplateLineAction>
         <LineAction
           name={"Create a course"}
@@ -106,21 +128,21 @@ const Courses = props => {
           <Divider variant="middle" />
         </TemplateModalTitle>
         <TemplateModalBody >
-          <div className="courses-modal-content-field">
-            <div className="courses-modal-content-field-content">
-              <div className="courses-modal-content-field-content-label" >
+          <div className="template-modal-content-field">
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
                 Enter course code:
               </div>
-              <div className="courses-modal-content-field-content-input" >
-                <Input required />
+              <div className="template-modal-content-field-content-input" >
+                <Input required name='coursecode' value={coursecode} onChange={onCourseFormChange} />
               </div>
             </div>
-            <div className="courses-modal-content-field-content">
-              <div className="courses-modal-content-field-content-label" >
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
                 Enter course name:
               </div>
-              <div className="courses-modal-content-field-content-input" >
-                <Input required />
+              <div className="template-modal-content-field-content-input" >
+                <Input required name='coursename' value={coursename} onChange={onCourseFormChange} />
               </div>
             </div>
             <Divider variant="middle" />

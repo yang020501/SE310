@@ -15,54 +15,104 @@ import userApi from '../../api/userAPI';
 import { useDispatch } from 'react-redux';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/NotifyMessage';
+import { parseToISOSDate, parseToLocalDate, today } from '../../utils/parseDate';
+import { useAllUsersState, useFetchAllUsers } from '../../redux/user/hook';
+import variable from "../../utils/variable"
+import MiniPopup from '../../components/MiniPopup';
+import { deleteUsers } from '../../redux/user/allUsersSlice';
 const Accounts = () => {
+  useFetchAllUsers()
   let dispatch = useDispatch()
+  const Users = useAllUsersState()
   const initialUserForm = {
     username: "",
     password: "",
     email: "",
     fullName: "",
     role: "student",
-    repassword: ""
+    repassword: "",
+    dateOfBirth: today()
   }
   const [userForm, setUserForm] = useState(initialUserForm)
-  const { username, password, email, fullName, role, repassword } = userForm
+  const { username, password, email, fullName, role, repassword, dateOfBirth } = userForm
   const [openNewAccountModal, setopenNewAccountModal] = useState(false)
   const [alert, setAlert] = useState(null)
-
+  const [rows, setRows] = useState([])
+  const [OpenMiniPopupAccounts, setOpenMiniPopupAccounts] = useState(false)
+  const [selectID, setSelectID] = useState("")
+  const headers = variable([
+    "Id",
+    "Username",
+    "Full Name",
+    "Email",
+    "Role",
+    "Option"
+  ])
   const closeAlert = () => setAlert(null)
   const onChange = (e) => {
-    setUserForm({
-      ...userForm,
-      [e.target.name]: e.target.value
-    })
+    if (e.target.name === "dateOfBirth")
+      setUserForm({
+        ...userForm,
+        [e.target.name]: parseToISOSDate(e.target.value)
+      })
+    else {
+      setUserForm({
+        ...userForm,
+        [e.target.name]: e.target.value
+      })
+    }
   }
-  const checkPasswordChange = () => {
-    return password === repassword ? 1 : 0
-  }
+
   const onCreateAccountSubmit = async (event) => {
     event.preventDefault()
     event.stopPropagation()
-    if (!checkPasswordChange())
+    if (!(password === repassword))
       setAlert(<MyAlert type={"error"} message="Re-Password differ to Password!" close={() => { closeAlert() }} />)
     else {
 
       if (window.confirm("Create user account?")) {
         let rs = await userApi.register(userForm).catch(data => { return data.response })
         if (await rs.status === 200) {
-          dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("user")))
+          dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("user")))
           setUserForm(initialUserForm)
           setopenNewAccountModal(false)
         }
         else {
-          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("user")))
+          dispatch(setSnackbar(notifyMessage.CREATE_FAIL("user")))
         }
+      }
+    }
+  }
+  const deleteAccount = async () => {
+
+    if (window.confirm("Delete user ?")) {
+      let rs = await userApi.deleteUser(selectID).catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(deleteUsers(selectID))
+        dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("user")))
+      }
+      else {
+        dispatch(setSnackbar(notifyMessage.DELETE_FAIL("user")))
       }
     }
   }
   useEffect(() => {
     setUserForm(initialUserForm)
   }, [])
+  useEffect(() => {
+    let tmp = Users.map((item, index) => {
+
+      return {
+        ...item,
+        'no.': index + 1,
+        option: (id) => {
+          setOpenMiniPopupAccounts(id)
+          setSelectID(id)
+        }
+      }
+    })
+    setRows([...tmp])
+  }, [Users])
   return (
     <Template>
       <TemplateSearch>
@@ -75,7 +125,17 @@ const Accounts = () => {
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid />
+        <MyDataGrid ColumnHeader={headers} Data={rows} />
+        <MiniPopup
+          open={OpenMiniPopupAccounts}
+          close={() => setOpenMiniPopupAccounts(false)}
+          actions={[
+            {
+              name: "Delete account",
+              click: () => { deleteAccount() }
+            }
+          ]} />
+
       </TemplateData>
       <TemplateModal
         open={openNewAccountModal}
@@ -110,7 +170,7 @@ const Accounts = () => {
                 Date of birth:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input type='date' />
+                <Input type='date' name="dateOfBirth" value={parseToLocalDate(dateOfBirth)} onChange={onChange} />
               </div>
             </div>
 
@@ -119,7 +179,7 @@ const Accounts = () => {
                 Email:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input type='mail' required name="email" value={email} onChange={onChange} />
+                <Input type='email' required name="email" value={email} onChange={onChange} />
               </div>
             </div>
             <div className="template-modal-content-field-content">

@@ -14,9 +14,14 @@ import Class from "./pages/User/Class";
 import Classes from "./pages/User/Classes";
 import ClassDetail from "./pages/User/ClassDetail";
 import { useSelector } from 'react-redux';
-import React from "react";
+import React,{useEffect} from "react";
+
 function App() {
+  
   const role = useSelector(state => state.userState.user ? state.userState.user.role : "")
+  useEffect(() => {
+    
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
@@ -40,7 +45,7 @@ function App() {
                   </React.Fragment> :
                   <></>
           }
-          
+
         </Route>
 
         <Route element={<AuthLayout />} >

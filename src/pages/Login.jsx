@@ -10,6 +10,7 @@ import { login } from '../redux/user/userSlice';
 import MyBackdrop from '../components/MyBackdrop';
 import { setLoading } from '../redux/user/loginLoadingSlice';
 import { useNavigate } from 'react-router-dom';
+import { useFetchUser } from '../redux/user/hook';
 const Login = () => {
     let dispatch = useDispatch()
     let navigate = useNavigate()

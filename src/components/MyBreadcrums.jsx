@@ -5,7 +5,6 @@ import { useLocation, Link } from "react-router-dom"
 const MyBreadcrums = props => {
     const { pathname } = useLocation();
     const links = pathname.slice(1,pathname.length).split("/")
-    console.log(pathname,links);
     return (
         <Breadcrumbs aria-label="breadcrumb">
             {

@@ -16,23 +16,30 @@ import userApi from '../../api/userAPI';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/NotifyMessage';
 import MyAlert from '../../components/MyAlert';
+import { parseToISOSDate, parseToLocalDate, today } from '../../utils/parseDate';
 
 const Profile = () => {
+
     useFetchUser()
     let dispatch = useDispatch()
     const userState = useUserState()
     const pictureRef = useRef(null)
     const initialPasswordForm = {
-        username: userState.value.username,
+        username: userState.value.username ? userState.value.username : "",
         oldPassword: "",
         newPassword: "",
         renewPassword: ""
     }
-    const [userForm, setUserForm] = useState({})
+    const initialUserForm = {
+        fullName: "",
+        email: "",
+        dateOfBirth: ""
+    }
+    const [userForm, setUserForm] = useState(initialUserForm)
     const [passwordForm, setPasswordForm] = useState(initialPasswordForm)
     const [open, setOpen] = useState(false)
     const [alert, setAlert] = useState(null)
-    const { fullName, email } = userForm
+    const { fullName, email, dateOfBirth } = userForm
     const { oldPassword, newPassword, renewPassword } = passwordForm
     const uploadPicture = () => pictureRef.current.click()
     const onAvatarChange = (e) => {
@@ -51,10 +58,17 @@ const Profile = () => {
 
     }
     const onChange = (e) => {
-        setUserForm({
-            ...userForm,
-            [e.target.name]: e.target.value
-        })
+        if (e.target.name === "dateOfBirth")
+            setUserForm({
+                ...userForm,
+                [e.target.name]: parseToISOSDate(e.target.value)
+            })
+        else {
+            setUserForm({
+                ...userForm,
+                [e.target.name]: e.target.value
+            })
+        }
 
     }
     const onPasswordFormChange = (e) => {
@@ -114,13 +128,16 @@ const Profile = () => {
         }
     }
     useEffect(() => {
-        setUserForm({ ...userState.value })
-        if (userState.value)
+
+        if (Object.keys(userState.value).length) {
             setPasswordForm({ ...passwordForm, username: userState.value.username })
+            setUserForm({ ...userState.value })
+        }
     }, [userState])
     useEffect(() => {
         setPasswordForm({ ...initialPasswordForm })
     }, [open])
+
     return (
 
         <div className='profile'>
@@ -162,7 +179,7 @@ const Profile = () => {
                             </div>
                             <div className="profile-item-right-fields-block">
                                 <div className='label'>Day of birth:</div>
-                                <TextField className='input' type="date" fullWidth size='small' placeholder='name' name='date' onChange={onChange} />
+                                <TextField className='input' type="date" fullWidth size='small' name='dateOfBirth' value={dateOfBirth ? parseToLocalDate(dateOfBirth) : ""} onChange={onChange} />
                                 <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                             </div>
                             <div className="profile-item-right-fields-block">

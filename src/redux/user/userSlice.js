@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+
 import userApi from "../../api/userAPI";
 
-const user = localStorage.getItem('user') !== null ? JSON.parse(localStorage.getItem('user')) : null
+let user = localStorage.getItem('user') !== null ? JSON.parse(localStorage.getItem('user')) : null
 
 
 export const login = createAsyncThunk(
@@ -31,7 +31,7 @@ export const register = createAsyncThunk(
     }
 )
 export const updateUser = createAsyncThunk(
-    'user/updateuser',
+    'user/updateUser',
     async (data, { rejectWithValue }) => {
 
         const rs = await userApi.updateUser(data).catch(data => { return data.response })
@@ -43,7 +43,7 @@ export const updateUser = createAsyncThunk(
     }
 )
 export const fetchUser = createAsyncThunk(
-    'user/fetchuser',
+    'user/fetchUser',
     async (data, { rejectWithValue }) => {
 
         const rs = await userApi.fetchUser().catch(data => { return data.response })
@@ -54,6 +54,7 @@ export const fetchUser = createAsyncThunk(
         return rs.data
     }
 )
+
 const initialState = {
     loading: false,
     user: user,
@@ -87,8 +88,8 @@ const userSlice = createSlice({
             state.loading = false
             state.user = action.payload
             state.err = null
+            // axios.AxiosHeaders. .defaults.headers['Authorization'] = "Bearer " + action.payload.token
             localStorage.setItem('user', JSON.stringify(action.payload))
-
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
@@ -106,8 +107,6 @@ const userSlice = createSlice({
             state.loading = false;
             state.err = action.payload.title
         })
-
-
     }
 })
 

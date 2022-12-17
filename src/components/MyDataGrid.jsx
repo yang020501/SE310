@@ -25,7 +25,7 @@ const MyDataGrid = props => {
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
-                field: item.key,
+                field: item.key === "id" ? "no." : item.key ,
                 headerName: item.key === "id" ? "No." : item.value,
                 width: item.width,
                 headerAlign: 'center',
@@ -40,7 +40,14 @@ const MyDataGrid = props => {
                         }
                     }
                     else if (params.field === "option")
-                        return (<DataGridOptions click={params.row.option} />)
+                    {
+                        let id = params.row.id
+                        let type = params.row ? params.row.option.type : ""
+                        let func = params.row ? params.row.option.click : null
+                        return (<DataGridOptions click={() => {params.row.option(id)}} />)
+                        // return <DataGridOptions click={() => func(id, name)} type={type} />
+                    }
+                        
 
                 }
 
@@ -75,6 +82,7 @@ const MyDataGrid = props => {
                 rowsPerPageOptions={[5, 10, 15]}
                 // checkboxSelection
                 disableSelectionOnClick
+                loading={rows.length > 0 ? false  : true}
                 experimentalFeatures={{ newEditingApi: true }}
             />
             {/* <div className="datagrid-function" ref={dataGridFunctionRef}>

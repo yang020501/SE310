@@ -1,14 +1,19 @@
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 import { API_BASE_URL } from '../config/index'
 
-let token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : ""
+
 
 const axiosClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'content-type': 'application/json',
-        'Authorization': 'Bearer ' + token
     }
 })
+axiosClient.interceptors.request.use(function (config) {
+    let token = localStorage.getItem('user') ? "Bearer " + JSON.parse(localStorage.getItem('user')).token : null
+    config.headers.Authorization = token ? token : null;
+    return config;
+});
 
 export default axiosClient

@@ -23,6 +23,7 @@ const MiniPopup = props => {
         if (props.open) {
             openOptionMenu()
         }
+        console.log(props.open);
     }, [props.open])
     return (
         <div className="minipopup">
@@ -46,7 +47,7 @@ const MiniPopup = props => {
 
 MiniPopup.propTypes = {
     actions: PropTypes.array,
-    open: PropTypes.bool,
+    open: PropTypes.string,
     close: PropTypes.func
 }
 
