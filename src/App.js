@@ -1,11 +1,10 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import AuthLayout from "./layout/AuthLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Profile from "./pages/User/Profile";
 import Landing from "./pages/Landing";
 import Login from './pages/Login'
-import Register from './pages/Register'
 import PageNotFound from "./pages/PageNotFound";
 import Accounts from "./pages/Admin/Accounts";
 import Courses from "./pages/User/Courses";
@@ -49,7 +48,6 @@ function App() {
         </Route>
 
         <Route element={<AuthLayout />} >
-          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Route>
 

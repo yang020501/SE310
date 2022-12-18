@@ -1,8 +1,5 @@
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 import { API_BASE_URL } from '../config/index'
-
-
 
 const axiosClient = axios.create({
     baseURL: API_BASE_URL,

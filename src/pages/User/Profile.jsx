@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { TemplateModal, TemplateModalBody, TemplateModalAction } from '../../components/Template';
@@ -16,7 +15,7 @@ import userApi from '../../api/userAPI';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/NotifyMessage';
 import MyAlert from '../../components/MyAlert';
-import { parseToISOSDate, parseToLocalDate, today } from '../../utils/parseDate';
+import { parseToISOSDate, parseToLocalDate } from '../../utils/parseDate';
 
 const Profile = () => {
 
@@ -102,7 +101,7 @@ const Profile = () => {
 
                 }
                 else {
-                    if (rs.status = 400)
+                    if (rs.status === 400)
                         dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("password", "Current password is incorrect.")))
                     else
                         dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("password", "Try again")))
@@ -133,7 +132,7 @@ const Profile = () => {
             setPasswordForm({ ...passwordForm, username: userState.value.username })
             setUserForm({ ...userState.value })
         }
-    }, [userState])
+    }, [userState,passwordForm])
     useEffect(() => {
         setPasswordForm({ ...initialPasswordForm })
     }, [open])

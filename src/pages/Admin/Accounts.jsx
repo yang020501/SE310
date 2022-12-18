@@ -100,8 +100,8 @@ const Accounts = () => {
     setUserForm(initialUserForm)
   }, [])
   useEffect(() => {
-    let tmp = Users.map((item, index) => {
-
+    let tmp = Users.filter(item => item.role !== "admin")
+    tmp = tmp.map((item, index) => {
       return {
         ...item,
         'no.': index + 1,
