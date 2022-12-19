@@ -40,6 +40,7 @@ const Accounts = () => {
   const [rows, setRows] = useState([])
   const [OpenMiniPopupAccounts, setOpenMiniPopupAccounts] = useState(false)
   const [selectID, setSelectID] = useState("")
+  const [searchData, setSearchData] = useState([])
   const headers = variable([
     "Id",
     "Username",
@@ -83,6 +84,7 @@ const Accounts = () => {
       }
     }
   }
+
   const deleteAccount = async () => {
 
     if (window.confirm("Delete user ?")) {
@@ -90,6 +92,8 @@ const Accounts = () => {
       if (await rs.status === 200) {
         dispatch(deleteUsers(selectID))
         dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("user")))
+        if (searchData.length > 0)
+          setSearchData([])
       }
       else {
         dispatch(setSnackbar(notifyMessage.DELETE_FAIL("user")))
@@ -116,7 +120,7 @@ const Accounts = () => {
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar />
+        <SearchBar data={rows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchData(data) }} />
       </TemplateSearch>
       <TemplateLineAction>
         <LineAction
@@ -125,9 +129,9 @@ const Accounts = () => {
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={headers} Data={rows} />
+        <MyDataGrid ColumnHeader={headers} Data={searchData.length > 0 ? searchData : rows} />
         <MiniPopup
-          open={OpenMiniPopupAccounts}
+          open={`${OpenMiniPopupAccounts}`}
           close={() => setOpenMiniPopupAccounts(false)}
           actions={[
             {

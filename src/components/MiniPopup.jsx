@@ -23,7 +23,6 @@ const MiniPopup = props => {
         if (props.open) {
             openOptionMenu()
         }
-        console.log(props.open);
     }, [props.open])
     return (
         <div className="minipopup">

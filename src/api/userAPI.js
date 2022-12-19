@@ -2,13 +2,17 @@
 import axiosClient from "./axiosClient"
 
 const userApi = {
-    fetchUser: () => {        
+    fetchUser: () => {
         const url = `/api/user/info`
-        return axiosClient.get(url)      
+        return axiosClient.get(url)
     },
-    fetchAllUsers: () => {        
+    fetchAllUsers: () => {
         const url = `/api/user/get-all`
-        return axiosClient.get(url)      
+        return axiosClient.get(url)
+    },
+    fetchAllLecturers: () => {
+        const url = `api/user/get-lecturers`
+        return axiosClient.get(url)
     },
     changePasswordUser: (body) => {
         const url = `/api/user/info/change-password`

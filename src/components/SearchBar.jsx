@@ -9,12 +9,37 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useRef, useState, useEffect } from 'react';
 const SearchBar = props => {
   const cancelRef = useRef(null)
+
   const [inputSearch, SetInputSearch] = useState('')
 
-  const onInputChange = (event) => {
-    SetInputSearch(event.target.value)
+  const handleFilter = (event) => {
+    const searchWord = event.target.value;
+    SetInputSearch(searchWord);
+    let newFilter
+    props.keyword.every(element => {
+      newFilter = props.data.filter((value) => {
+        return normalizeStr(value[element]).toLowerCase().includes(normalizeStr(searchWord).toLowerCase());
+      });
+      if (newFilter.length > 0)
+        return false
+      return true
+    });
 
+    if (searchWord === "") {
+      props.onsearch([]);
+    } else if (!(newFilter.length === 0)) {
+      props.onsearch(newFilter);
+    }
+
+  };
+
+  // chuẩn hóa chuỗi về dạng không dấu
+  const normalizeStr = (str) => {
+    return str.normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd').replace(/Đ/g, 'D');
   }
+
 
   useEffect(() => {
     if (inputSearch !== "") {
@@ -34,14 +59,13 @@ const SearchBar = props => {
         <IconButton sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
         </IconButton>
-        <Divider sx={{ height: 28, m: 0.5,borderRightWidth:2 }} orientation="vertical" />
+        <Divider sx={{ height: 28, m: 0.5, borderRightWidth: 2 }} orientation="vertical" />
         <InputBase
           sx={{ ml: 1, flex: 1 }}
           placeholder="Search ..."
-          onChange={onInputChange}
+          onChange={handleFilter}
           value={inputSearch}
           name="inputSearch"
-        // inputProps={{ 'aria-label': 'search google maps' }}
         />
         <div className="searchbar-cancel" ref={cancelRef} onClick={() => SetInputSearch('')}>
           <IconButton sx={{ p: '10px' }} >
@@ -55,7 +79,11 @@ const SearchBar = props => {
 }
 
 SearchBar.propTypes = {
-  data: PropTypes.array
+  data: PropTypes.array,
+  placeholder: PropTypes.string,
+  onsearch: PropTypes.func,
+  keyword: PropTypes.array,
+
 }
 
 export default SearchBar

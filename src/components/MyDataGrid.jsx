@@ -5,49 +5,35 @@ import DataGridOptions from './DataGridOptions'
 import DataGridAdd from './DataGridAdd'
 import useMousePosition from '../utils/mousePosition'
 const MyDataGrid = props => {
-    // const mousePosition = useMousePosition()
-    // const dataGridFunctionRef = useRef(null)
+
     const [pageSize, setPageSize] = React.useState(5);
 
-    // const closeOptionMenu = () => {
-    //     let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
-    //     if (!(valid.value === "gridoption")) {
-    //         dataGridFunctionRef.current.classList.remove('show')
-    //         window.removeEventListener('click', closeOptionMenu)
-    //     }
-    // }
-    // const openOptionMenu = () => {
-    //     dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
-    //     dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-    //     dataGridFunctionRef.current.classList.add('show')
-    //     window.addEventListener('click', closeOptionMenu)
-    // }
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
-                field: item.key === "id" ? "no." : item.key ,
+                field: item.key === "id" ? "no." : item.key,
                 headerName: item.key === "id" ? "No." : item.value,
                 width: item.width,
                 headerAlign: 'center',
                 align: 'center',
                 renderCell: (params) => {
-                    if (params.field === "lecturer") {
+                    if (params.field === "lecturerId") {
                         if (params.value) {
                             if (typeof (params.value) === "function")
-                                return (<DataGridAdd click={params.row.lecturer} />)
+                                return (<DataGridAdd click={params.row.lecturerId} />)
                             else
                                 return params.value
                         }
                     }
-                    else if (params.field === "option")
-                    {
+                    else if (params.field === "option") {
                         let id = params.row.id
                         let type = params.row ? params.row.option.type : ""
                         let func = params.row ? params.row.option.click : null
-                        return (<DataGridOptions click={() => {params.row.option(id)}} />)
+                        let lecturerId = params.row.lecturerId ? typeof (params.row.lecturerId) === "function" ? "" : params.row.lecturerId : ""
+                        return (<DataGridOptions click={() => { params.row.option(id, lecturerId) }} />)
                         // return <DataGridOptions click={() => func(id, name)} type={type} />
                     }
-                        
+
 
                 }
 
@@ -82,21 +68,9 @@ const MyDataGrid = props => {
                 rowsPerPageOptions={[5, 10, 15]}
                 // checkboxSelection
                 disableSelectionOnClick
-                loading={rows.length > 0 ? false  : true}
+                loading={rows.length > 0 ? false : true}
                 experimentalFeatures={{ newEditingApi: true }}
             />
-            {/* <div className="datagrid-function" ref={dataGridFunctionRef}>
-                <div className="datagrid-function-item">
-                    Add a Student
-                </div>
-                <div className="datagrid-function-item">
-                    Manage students
-                </div>
-                <div className="datagrid-function-item">
-                    Remove lecturer
-                </div>
-            </div> */}
-
         </React.Fragment>
 
     )
