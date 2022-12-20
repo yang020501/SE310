@@ -14,16 +14,16 @@ import MyAlert from '../../components/MyAlert';
 import userApi from '../../api/userAPI';
 import { useDispatch } from 'react-redux';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
-import notifyMessage from '../../utils/NotifyMessage';
+import notifyMessage from '../../utils/notifyMessage';
 import { parseToISOSDate, parseToLocalDate, today } from '../../utils/parseDate';
-import { useAllUsersState, useFetchAllUsers } from '../../redux/user/hook';
+import { useUsers, useFetchAllUsers } from '../../redux/user/hook';
 import variable from "../../utils/variable"
 import MiniPopup from '../../components/MiniPopup';
-import { deleteUsers } from '../../redux/user/allUsersSlice';
+import { addUsers, deleteUsers } from '../../redux/user/allUsersSlice';
 const Accounts = () => {
   useFetchAllUsers()
   let dispatch = useDispatch()
-  const Users = useAllUsersState()
+  const Users = useUsers()
   const initialUserForm = {
     username: "",
     password: "",
@@ -74,7 +74,12 @@ const Accounts = () => {
       if (window.confirm("Create user account?")) {
         let rs = await userApi.register(userForm).catch(data => { return data.response })
         if (await rs.status === 200) {
+          console.log(rs.data);
           dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("user")))
+          dispatch(addUsers({
+            ...userForm,
+            id: rs.data
+          }))
           setUserForm(initialUserForm)
           setopenNewAccountModal(false)
         }
@@ -90,10 +95,11 @@ const Accounts = () => {
     if (window.confirm("Delete user ?")) {
       let rs = await userApi.deleteUser(selectID).catch(data => { return data.response })
       if (await rs.status === 200) {
-        dispatch(deleteUsers(selectID))
-        dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("user")))
         if (searchData.length > 0)
           setSearchData([])
+        dispatch(deleteUsers(selectID))
+        dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("user")))
+
       }
       else {
         dispatch(setSnackbar(notifyMessage.DELETE_FAIL("user")))
@@ -105,13 +111,17 @@ const Accounts = () => {
   }, [])
   useEffect(() => {
     let tmp = Users.filter(item => item.role !== "admin")
+
     tmp = tmp.map((item, index) => {
       return {
         ...item,
         'no.': index + 1,
-        option: (id) => {
-          setOpenMiniPopupAccounts(id)
-          setSelectID(id)
+        option: {
+          type: "option",
+          click: (id) => {
+            setOpenMiniPopupAccounts(true)
+            setSelectID(id)
+          }
         }
       }
     })
@@ -131,7 +141,7 @@ const Accounts = () => {
       <TemplateData>
         <MyDataGrid ColumnHeader={headers} Data={searchData.length > 0 ? searchData : rows} />
         <MiniPopup
-          open={`${OpenMiniPopupAccounts}`}
+          open={OpenMiniPopupAccounts}
           close={() => setOpenMiniPopupAccounts(false)}
           actions={[
             {
@@ -225,6 +235,7 @@ const Accounts = () => {
           </div>
         </TemplateModalBody>
         <TemplateModalAction
+          activeRight
           size="sm"
           funcError={() => { setopenNewAccountModal(false) }}
         />

@@ -11,7 +11,8 @@ const SearchBar = props => {
   const cancelRef = useRef(null)
 
   const [inputSearch, SetInputSearch] = useState('')
-
+  const { onsearch } = { ...props }
+  
   const handleFilter = (event) => {
     const searchWord = event.target.value;
     SetInputSearch(searchWord);
@@ -47,13 +48,14 @@ const SearchBar = props => {
     }
     else {
       cancelRef.current.classList.remove('show')
+      onsearch([]);
     }
 
   }, [inputSearch]);
   return (
     <div className="searchbar">
       <Paper
-        component="form"
+        // component="form"
         sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
       >
         <IconButton sx={{ p: '10px' }} aria-label="search">
@@ -67,7 +69,7 @@ const SearchBar = props => {
           value={inputSearch}
           name="inputSearch"
         />
-        <div className="searchbar-cancel" ref={cancelRef} onClick={() => SetInputSearch('')}>
+        <div className="searchbar-cancel" ref={cancelRef} onClick={() => SetInputSearch("")}>
           <IconButton sx={{ p: '10px' }} >
             <CancelIcon />
           </IconButton>

@@ -94,6 +94,11 @@ body {
     .MuiDataGrid-cell {
         color: $txt-third-color;
         font-weight: 700;
+        .MuiButton-root{
+            width: 50%;
+            height: 50%;
+            font-size: 8pt;
+        }
     }
     .MuiDataGrid-root {
         border-left: unset;

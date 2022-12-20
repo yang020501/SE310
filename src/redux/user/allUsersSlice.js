@@ -31,6 +31,18 @@ export const fetchAllLecturers = createAsyncThunk(
         return rs.data
     }
 )
+export const fetchAllStudents = createAsyncThunk(
+    'user/fetchAllStudents',
+    async (data, { rejectWithValue }) => {
+
+        const rs = await userApi.fetchAllStudents().catch(data => { return data.response })
+
+        if (rs.status < 200 || rs.status >= 300) {
+            return rejectWithValue(rs.data);
+        }
+        return rs.data
+    }
+)
 
 
 const allUsersSlice = createSlice({
@@ -39,6 +51,14 @@ const allUsersSlice = createSlice({
     reducers: {
         setUsers: (state, action) => {
             state.users = action.payload
+        },
+        addUsers: (state, action) => {
+            let users = state.users
+            let user = action.payload
+
+            users.push(user)
+
+            state.users = users
         },
         deleteUsers: (state, action) => {
             let id = action.payload
@@ -70,12 +90,21 @@ const allUsersSlice = createSlice({
         builder.addCase(fetchAllLecturers.rejected, (state, action) => {
 
         })
+        builder.addCase(fetchAllStudents.pending, state => {
 
+        })
+        builder.addCase(fetchAllStudents.fulfilled, (state, action) => {
+            state.students = action.payload
+        })
+        builder.addCase(fetchAllStudents.rejected, (state, action) => {
+
+        })
     }
 })
 
 export const {
     setUsers,
+    addUsers,
     deleteUsers
 } = allUsersSlice.actions
 

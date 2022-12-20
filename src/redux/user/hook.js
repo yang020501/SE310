@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchUser } from './userSlice'
-import { fetchAllLecturers, fetchAllUsers } from './allUsersSlice'
+import { fetchAllLecturers, fetchAllStudents, fetchAllUsers } from './allUsersSlice'
 
 
 export const useUserState = () => useSelector((state) => state.userState)
 export const useUserStateValue = () => useSelector((state) => state.userState.value)
-export const useAllUsersState = () => useSelector((state) => state.allUsersState.users)
-export const useAllLecturers = () => useSelector((state) => state.allUsersState.lecturers)
+export const useUsers = () => useSelector((state) => state.allUsersState.users)
+export const useLecturers = () => useSelector((state) => state.allUsersState.lecturers)
+export const useStudents = () => useSelector((state) => state.allUsersState.students)
 
 export const useFetchAllUsers = () => {
     const dispatch = useDispatch()
@@ -15,7 +16,6 @@ export const useFetchAllUsers = () => {
     useEffect(() => {
         dispatch(fetchAllUsers())
     }, [])
-
 }
 export const useFetchAllLecturers = () => {
     const dispatch = useDispatch()
@@ -23,11 +23,17 @@ export const useFetchAllLecturers = () => {
     useEffect(() => {
         dispatch(fetchAllLecturers())
     }, [])
+}
+export const useFetchAllStudents = () => {
+    let dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(fetchAllStudents())
+    }, [])
 }
 
 export const useFetchUser = () => {
-    const dispatch = useDispatch()
+    let dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(fetchUser())

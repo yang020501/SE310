@@ -1,3 +1,4 @@
+
 export const notifyType = {
     SUCCESS: "success",
     ERROR: "error",
@@ -5,9 +6,15 @@ export const notifyType = {
     INFO: 'info'
 }
 const notifyMessage = {
-    UPDATE_SUCCESS: (props) => {
+    ERROR: (props) => {
         return {
-            message: `Update ${props ? props : ""} successfully!`,
+            message: props,
+            type: notifyType.ERROR
+        }
+    },
+    UPDATE_SUCCESS: (one, two) => {
+        return {
+            message: `Update ${one ? one : ""} successfully! ${two ? two : ""}`,
             type: notifyType.SUCCESS
         }
     },

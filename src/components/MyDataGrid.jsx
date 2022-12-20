@@ -3,11 +3,14 @@ import PropTypes from 'prop-types'
 import { DataGrid } from "@mui/x-data-grid"
 import DataGridOptions from './DataGridOptions'
 import DataGridAdd from './DataGridAdd'
-import useMousePosition from '../utils/mousePosition'
+import MyButton from './MyButton'
+import { findElementById } from '../utils/uitility'
+import { useFetchAllLecturers, useLecturers } from '../redux/user/hook'
 const MyDataGrid = props => {
-
-    const [pageSize, setPageSize] = React.useState(5);
-
+    useFetchAllLecturers()
+    const Lecturers = useLecturers()
+    const [pageSize, setPageSize] = React.useState(6);
+    const checkList = props.CheckboxFunc ? props.CheckboxFunc : () => { console.log("null"); }
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
@@ -20,17 +23,26 @@ const MyDataGrid = props => {
                     if (params.field === "lecturerId") {
                         if (params.value) {
                             if (typeof (params.value) === "function")
-                                return (<DataGridAdd click={params.row.lecturerId} />)
-                            else
+                                return (<DataGridAdd click={() => { params.row.lecturerId(params.row.id) }} />)
+                            else {
+
+                                let element = findElementById(params.value, Lecturers)
+                                if (element)
+                                    return element.fullName
                                 return params.value
+                            }
                         }
                     }
                     else if (params.field === "option") {
                         let id = params.row.id
-                        let type = params.row ? params.row.option.type : ""
-                        let func = params.row ? params.row.option.click : null
+                        let type = params.row.option.type ? params.row.option.type : ""
+                        let func = params.row.option.click ? params.row.option.click : () => { console.log("null here") }
                         let lecturerId = params.row.lecturerId ? typeof (params.row.lecturerId) === "function" ? "" : params.row.lecturerId : ""
-                        return (<DataGridOptions click={() => { params.row.option(id, lecturerId) }} />)
+
+                        if (type === "option")
+                            return (<DataGridOptions click={() => { func(id, lecturerId) }} />)
+                        else if (type = "confirm")
+                            return (<MyButton size="sm" onclick={() => func(id)} >Confirm</MyButton>)
                         // return <DataGridOptions click={() => func(id, name)} type={type} />
                     }
 
@@ -65,9 +77,10 @@ const MyDataGrid = props => {
                 columns={columns}
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[5, 10, 15]}
-                // checkboxSelection
+                rowsPerPageOptions={[6, 10, 15]}
+                checkboxSelection={props.Checkbox}
                 disableSelectionOnClick
+                onSelectionModelChange={(id) => { checkList(id) }}
                 loading={rows.length > 0 ? false : true}
                 experimentalFeatures={{ newEditingApi: true }}
             />
@@ -78,7 +91,9 @@ const MyDataGrid = props => {
 
 MyDataGrid.propTypes = {
     ColumnHeader: PropTypes.array,
-    Data: PropTypes.array
+    Data: PropTypes.array,
+    Checkbox: PropTypes.bool,
+    CheckboxFunc: PropTypes.func
 }
 
 export default MyDataGrid

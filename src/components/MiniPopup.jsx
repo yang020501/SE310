@@ -46,7 +46,7 @@ const MiniPopup = props => {
 
 MiniPopup.propTypes = {
     actions: PropTypes.array,
-    open: PropTypes.string,
+    open: PropTypes.bool,
     close: PropTypes.func
 }
 

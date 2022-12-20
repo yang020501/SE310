@@ -34,13 +34,13 @@ function App() {
               role === "mod" ?
                 <React.Fragment>
                   <Route path="/courses" element={<Courses />} />
-                  <Route path="/courses/:id" element={<Course />} />
+                  <Route path="/courses/:courseId" element={<Course />} />
                 </React.Fragment> :
                 (role === "lecturer" || role === "student") ?
                   <React.Fragment>
-                    <Route path="/classes" element={<Classes />} />
-                    <Route path="/classes/:id" element={<Class />} />
-                    <Route path="/classes/:id/:id" element={<ClassDetail />} />
+                    <Route path="/courses" element={<Classes />} />
+                    <Route path="/courses/:id" element={<Class />} />
+                    <Route path="/courses/:id/:id" element={<ClassDetail />} />
                   </React.Fragment> :
                   <></>
           }

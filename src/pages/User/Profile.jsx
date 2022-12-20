@@ -13,7 +13,7 @@ import { Box } from '@mui/system';
 import { updateUserValue } from '../../redux/user/userSlice';
 import userApi from '../../api/userAPI';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
-import notifyMessage from '../../utils/NotifyMessage';
+import notifyMessage from '../../utils/notifyMessage';
 import MyAlert from '../../components/MyAlert';
 import { parseToISOSDate, parseToLocalDate } from '../../utils/parseDate';
 

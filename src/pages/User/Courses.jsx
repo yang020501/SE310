@@ -5,6 +5,7 @@ import variable from '../../utils/variable'
 import LineAction from '../../components/LineAction';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import Input from '@mui/material/Input';
 import Template, {
   TemplateLineAction, TemplateData,
@@ -14,38 +15,42 @@ import Template, {
 import MiniPopup from '../../components/MiniPopup';
 import courseApi from '../../api/courseAPI';
 import { useDispatch } from 'react-redux';
-import notifyMessage from '../../utils/NotifyMessage';
+import notifyMessage from '../../utils/notifyMessage';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import { useCourses, useFetchAllCourses } from '../../redux/course/hook';
-import { addCourses } from '../../redux/course/coursesSlice';
-import { useAllLecturers, useFetchAllLecturers } from '../../redux/user/hook';
+import { addCourses, updateCourses } from '../../redux/course/coursesSlice';
+import { useLecturers, useFetchAllLecturers } from '../../redux/user/hook';
+import { findElementById } from '../../utils/uitility';
+import { useMemo } from 'react';
 const Courses = props => {
   useFetchAllCourses()
   useFetchAllLecturers()
+  let dispatch = useDispatch()
+  let navigate = useNavigate()
   const Courses = useCourses()
-  const Lecturers = useAllLecturers()
+  const Lecturers = useLecturers()
   const initialCourseForm = {
     coursename: "",
     lecturerUserName: null,
     coursecode: "",
   }
-  console.log(Lecturers);
-  let dispatch = useDispatch()
+
   const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
   const [OpenAddLecturerModal, setOpenAddLecturerModal] = useState(false)
   const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState(false)
   const [selectCourseID, setSelectCourseID] = useState("")
   const [selectLecturerID, setSelectLecturerID] = useState("")
-  const [searchData, setSearchData] = useState([])
+  const [searchCourseData, setSearchCourseData] = useState([])
+  const [searchLecturersData, setSearchLecturersData] = useState([])
   const [rows, setRows] = useState([])
-  const [leturersRow, setLecturersRows] = useState([])
+  const [leturersRows, setLecturersRows] = useState([])
   const [courseForm, setCourseForm] = useState(initialCourseForm)
-  const { coursename, coursecode, lecturerUserName } = courseForm
+  const { coursename, coursecode } = courseForm
   const headers = variable([
     "Id",
     "Course Code",
     "Course Name",
-    "Lecturer Id",
+    "Lecturer Name",
     "Option"
   ])
   const lecturersHeaders = variable([
@@ -75,8 +80,8 @@ const Courses = props => {
         setCourseForm(initialCourseForm)
         setOpenCreateCourseModal(false)
         dispatch(addCourses(rs.data))
-        if (searchData.length > 0)
-          setSearchData([])
+        if (searchCourseData.length > 0)
+          setSearchCourseData([])
       }
       else {
         if (rs.status === 400)
@@ -86,44 +91,121 @@ const Courses = props => {
       }
     }
   }
-  const handleRemoveLecturer = async (event) => {
-    event.preventDefault()
-    event.stopPropagation()
+  const handleRemoveLecturer = async () => {
+    // console.log("delete lectuererid: ", selectLecturerID);
+    // console.log("delete courseid: ", selectCourseID);
+    if (!selectLecturerID) {
+      dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("lecturer", "No lectuers assigned to be removed!")))
+      return
+    }
+    else {
+      let lecturer = findElementById(selectLecturerID, Lecturers)
+      let course = findElementById(selectCourseID, Courses)
+      // console.log(lecturer, course);
+      if (!lecturer && !course) {
+        dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
+        return
+      }
+      if (window.confirm(`Remove lectuerer ${lecturer.fullName} from course ${course.coursecode}-${course.coursename} ?`)) {
+        let updateForm = {
+          ...course,
+          lecturerId: null
+        }
+        let rs = await courseApi.updateCourse(updateForm).catch(data => { return data.response })
+        if (await rs.status === 200) {
+          dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Lecturer removed.")))
+          dispatch(updateCourses(rs.data))
+          if (searchLecturersData.length > 0)
+            setSearchLecturersData([])
+        }
+        else {
+          if (rs.status === 400)
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot remove this lecturer.")))
+          else
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+        }
+      }
+
+    }
+
+  }
+
+  const handleAddLecturer = async (lecturerId) => {
+    // console.log("add lectuererid: ", lecturerId);
+    // console.log("add courseid: ", selectCourseID);
+    let lecturer = findElementById(lecturerId, Lecturers)
+    let course = findElementById(selectCourseID, Courses)
+    // console.log(lecturer, course);
+    if (!lecturer && !course) {
+      dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
+      return
+    }
+    if (window.confirm(`Add lectuerer ${lecturer.fullName} into course ${course.coursecode}-${course.coursename} ?`)) {
+      let updateForm = {
+        ...course,
+        lecturerId: lecturerId
+      }
+      let rs = await courseApi.updateCourse(updateForm).catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Lecturer added.")))
+        setOpenAddLecturerModal(false)
+        dispatch(updateCourses(rs.data))
+        if (searchLecturersData.length > 0)
+          setSearchLecturersData([])
+      }
+      else {
+        if (rs.status === 400)
+          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot add this lecturer.")))
+        else
+          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+      }
+    }
+
   }
   useEffect(() => {
-
     if (Courses.length > 0) {
       let tmp = Courses.map((item, index) => {
         return {
           ...item,
           'no.': index + 1,
-          lecturerId: item.lecturerId ? item.lecturerId : () => { setOpenAddLecturerModal(true) },
-          option: (id, lecturerId) => {
-            setOpenMiniPopupCourses(id)
-            setSelectCourseID(id)
-            setSelectLecturerID(lecturerId)
+          lecturerId: item.lecturerId ? item.lecturerId : (courseId) => {
+            setSelectCourseID(courseId)
+            setOpenAddLecturerModal(true)
+          },
+          option: {
+            type: "option",
+            click: (courseId, lecturerId) => {
+              setOpenMiniPopupCourses(true)
+              setSelectCourseID(courseId)
+              setSelectLecturerID(lecturerId)
+            }
           }
         }
       })
       setRows([...tmp])
     }
+  }, [Courses])
+  useMemo(() => {
     if (Lecturers.length > 0) {
       let tmp = Lecturers.map((item, index) => {
         return {
           ...item,
           'no.': index + 1,
-          option: (id) => {
-            setSelectLecturerID("id")
+          option: {
+            type: "confirm",
+            click: (lecturerId) => {
+              handleAddLecturer(lecturerId)
+            }
           }
         }
       })
       setLecturersRows([...tmp])
     }
-  }, [Courses, Lecturers])
+  }, [selectCourseID])
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar data={rows} keyword={["coursename", "coursecode"]} onsearch={(data) => { setSearchData(data) }} />
+        <SearchBar data={rows} keyword={["coursename", "coursecode"]} onsearch={(data) => { setSearchCourseData(data) }} />
       </TemplateSearch>
       <TemplateLineAction>
         <LineAction
@@ -132,18 +214,18 @@ const Courses = props => {
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={headers} Data={searchData.length > 0 ? searchData : rows} />
+        <MyDataGrid ColumnHeader={headers} Data={searchCourseData.length > 0 ? searchCourseData : rows} />
         <MiniPopup
           open={OpenMiniPopupCourses}
           close={() => setOpenMiniPopupCourses(false)}
           actions={[
             {
               name: "Manage student",
-              click: null
+              click: () => { navigate(`/courses/${selectCourseID}`) }
             },
             {
               name: "Remove lecturer",
-              click: null
+              click: handleRemoveLecturer
             }
           ]}
         />
@@ -179,7 +261,7 @@ const Courses = props => {
             <Divider variant="middle" />
           </div>
         </TemplateModalBody>
-        <TemplateModalAction funcError={closeCreateCourseModal} size="sm" />
+        <TemplateModalAction activeRight funcError={closeCreateCourseModal} size="sm" />
       </TemplateModal>
       <TemplateModal
         open={OpenAddLecturerModal}
@@ -187,10 +269,10 @@ const Courses = props => {
         form={false}
       >
         <TemplateModalTitle>
-
+          <SearchBar data={leturersRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
         </TemplateModalTitle>
         <TemplateModalBody >
-          <MyDataGrid ColumnHeader={lecturersHeaders} Data={leturersRow} />
+          <MyDataGrid ColumnHeader={lecturersHeaders} Data={searchLecturersData.length > 0 ? searchLecturersData : leturersRows} />
         </TemplateModalBody>
         <TemplateModalAction funcError={closeAddLecturerModal} size="lg" />
       </TemplateModal>

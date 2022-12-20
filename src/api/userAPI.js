@@ -14,6 +14,10 @@ const userApi = {
         const url = `api/user/get-lecturers`
         return axiosClient.get(url)
     },
+    fetchAllStudents: () => {
+        const url = `api/user/get-students`
+        return axiosClient.get(url)
+    },
     changePasswordUser: (body) => {
         const url = `/api/user/info/change-password`
         return axiosClient.patch(url, { ...body })
