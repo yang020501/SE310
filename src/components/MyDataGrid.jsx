@@ -41,8 +41,10 @@ const MyDataGrid = props => {
 
                         if (type === "option")
                             return (<DataGridOptions click={() => { func(id, lecturerId) }} />)
-                        else if (type = "confirm")
+                        else if (type === "confirm")
                             return (<MyButton size="sm" onclick={() => func(id)} >Confirm</MyButton>)
+                        else if (type === "delete")
+                            return ""
                         // return <DataGridOptions click={() => func(id, name)} type={type} />
                     }
 
