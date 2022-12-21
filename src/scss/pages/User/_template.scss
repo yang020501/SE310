@@ -33,7 +33,10 @@
         left: 50%;
         transform: translate(-50%, -50%);
         &.lg {
-            width: 60%;
+            width: 75%;
+            @include largescreen{
+                width: 60%;
+            }
         }
         &.sm {
             width: 35%;

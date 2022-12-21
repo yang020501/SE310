@@ -29,7 +29,7 @@ const MyDataGrid = props => {
                                 let element = findElementById(params.value, Lecturers)
                                 if (element)
                                     return element.fullName
-                                return params.value
+                                // return params.value
                             }
                         }
                     }
@@ -83,7 +83,7 @@ const MyDataGrid = props => {
                 checkboxSelection={props.Checkbox}
                 disableSelectionOnClick
                 onSelectionModelChange={(id) => { checkList(id) }}
-                loading={rows.length > 0 ? false : true}
+                loading={rows ? rows.length > 0 ? false : true : true}
                 experimentalFeatures={{ newEditingApi: true }}
             />
         </React.Fragment>

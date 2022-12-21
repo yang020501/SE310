@@ -9,13 +9,14 @@ const Landing = () => {
                 role ?
                     role === "admin" ?
                         <Navigate to='/admin' />
-                        : role === "mod" ?
-                            <Navigate to='/courses' />
-                            : <Navigate to='/classes' />
+                        :
+                        <Navigate to='/courses' />
+
                     : <Navigate to="/login" />
             }
         </React.Fragment>
 
-    )}
+    )
+}
 
 export default Landing

@@ -16,7 +16,7 @@ import notifyMessage from '../../utils/notifyMessage';
 import { useDispatch } from 'react-redux';
 import { updateCourses } from '../../redux/course/coursesSlice';
 import courseApi from '../../api/courseAPI';
-import { useCourses, useFetchAllCourses } from '../../redux/course/hook';
+import { useCourses, useFetchAllCourses, useFetchAllStudentsAssigned } from '../../redux/course/hook';
 import { findElementById } from '../../utils/uitility';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import { useParams } from 'react-router-dom';
@@ -26,24 +26,25 @@ const Course = () => {
   useFetchAllStudents()
   useFetchAllLecturers()
   useFetchAllCourses()
-  // useFetchAllAssignedStudents(courseId)
+
 
   let dispatch = useDispatch()
-  // const AssignedStudents = 
+  const AssignedStudents = useFetchAllStudentsAssigned(courseId)
   const Students = useStudents()
   const Lecturers = useLecturers()
   const Courses = useCourses()
 
   const [OpenAddStudentsModal, setOpenAddStudentsModal] = useState(false)
   const [OpenChangeLecturerModal, setOpenChangeLecturerModal] = useState(false)
-  const [OpenMiniPopupCourse, setOpenMiniPopupCourse] = useState(false)
+  const [OpenMiniPopupCourse, setOpenMiniPopupCourse] = useState("")
   const [searchLecturersData, setSearchLecturersData] = useState([])
-  const [searchStudentsData, setSearchStudentsData] = useState([])
+  const [searchStudentsAddedData, setSearchStudentsAddedData] = useState([])
   const [searchAssignedStudentsData, setSearchAssignedStudentsData] = useState([])
-  const [studentsRows, setStudentsRows] = useState([])
+  const [studentsAddedRows, setStudentsAddedRows] = useState([])
   const [leturersRows, setLecturersRows] = useState([])
   const [checkStudents, setCheckStudents] = useState([])
   const course = findElementById(courseId, Courses)
+  const lecturer = findElementById(course ? course.lecturerId : "", Lecturers)
   const assignedStudentsHeader = variable([
     "Id",
     "User Name",
@@ -76,12 +77,37 @@ const Course = () => {
     event.preventDefault()
     event.stopPropagation()
     console.log(checkStudents);
+    let studentnameList = checkStudents.map(item => {
+      let tmp = findElementById(item, Students)
+      return tmp.username
+    })
+    console.log(studentnameList);
+    if (window.confirm(`Add all students selected ?`)) {
+      let updateForm = {
+        courseId: courseId,
+        studentnameList: studentnameList
+      }
+      console.log(updateForm);
+      let rs = await courseApi.addStudentsForCourse(updateForm).catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Students added.")))
+        setOpenAddStudentsModal(false)
+        // dispatch(updateCourses(rs.data))
+        if (searchStudentsAddedData.length > 0)
+          setSearchStudentsAddedData([])
+      }
+      else {
+        if (rs.status === 400)
+          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot add this students.")))
+        else
+          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+      }
+    }
   }
   const handleChangeLecturer = async (lecturerId) => {
     // console.log("add lectuererid: ", lecturerId);
     // console.log("add courseid: ", selectCourseID);
     let lecturer = findElementById(lecturerId, Lecturers)
-    let course = findElementById(courseId, Courses)
 
     if (!lecturer && !course) {
       dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
@@ -110,7 +136,12 @@ const Course = () => {
   }
   useEffect(() => {
     if (Students.length > 0) {
-      let tmp = Students.map((item, index) => {
+
+
+      let tmp = Students.filter((item, index) => {
+        return AssignedStudents.findIndex(itemS => itemS === item.id) !== -1
+      })
+      tmp = tmp.map((item,index) => {
         return {
           ...item,
           'no.': index + 1,
@@ -123,9 +154,9 @@ const Course = () => {
           }
         }
       })
-      setStudentsRows([...tmp])
+      setStudentsAddedRows([...tmp])
     }
-  }, [Students])
+  }, [Students, AssignedStudents])
   useEffect(() => {
     if (Lecturers.length > 0) {
       let tmp = Lecturers.map((item, index) => {
@@ -148,7 +179,8 @@ const Course = () => {
       <TemplateSearch>
         <SearchBar data={assignedStudentsHeader} keyword={["fullName", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
       </TemplateSearch>
-      <TemplateTitle>{course ? course.coursename : ""}</TemplateTitle>
+      <TemplateTitle>{course ? `${course.coursecode} - ${course.coursename}` : ""}</TemplateTitle>
+      <TemplateTitle>Lecturer: {lecturer ? lecturer.fullName : "No lecturer assigned"}</TemplateTitle>
       <TemplateLineAction>
         <LineAction
           name={"Change Lecturer"}
@@ -157,15 +189,15 @@ const Course = () => {
       </TemplateLineAction>
       <TemplateLineAction>
         <LineAction
-          name={"Add a new Student"}
+          name={"Add new Students"}
           click={openAddStudentsModal}
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={assignedStudentsHeader} Data={assignedStudentsHeader ? [] : []} />
+        <MyDataGrid ColumnHeader={assignedStudentsHeader} Data={AssignedStudents ? [] : []} />
         <MiniPopup
           open={OpenMiniPopupCourse}
-          close={() => setOpenMiniPopupCourse(false)}
+          close={() => setOpenMiniPopupCourse("")}
           actions={[
             {
               name: "Remove student",
@@ -181,13 +213,13 @@ const Course = () => {
         onsubmit={handleAddStudents}
       >
         <TemplateModalTitle>
-          <SearchBar data={studentsRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsData(data) }} />
+          <SearchBar data={studentsAddedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsAddedData(data) }} />
         </TemplateModalTitle>
         <TemplateModalBody>
-          <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsData.length > 0 ? searchStudentsData : studentsRows} searchStudentsData />
+          <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} searchStudentsData />
         </TemplateModalBody>
         <TemplateModalAction
-          activeRight
+          activeRight={"Confirm"}
           funcError={closeAddStudentsModal}
           size="lg"
         />

@@ -56,6 +56,7 @@ const Profile = () => {
         }
 
     }
+    console.log(userForm);
     const onChange = (e) => {
         if (e.target.name === "dateOfBirth")
             setUserForm({
@@ -127,12 +128,11 @@ const Profile = () => {
         }
     }
     useEffect(() => {
-
         if (Object.keys(userState.value).length) {
             setPasswordForm({ ...passwordForm, username: userState.value.username })
             setUserForm({ ...userState.value })
         }
-    }, [userState,passwordForm])
+    }, [userState])
     useEffect(() => {
         setPasswordForm({ ...initialPasswordForm })
     }, [open])
@@ -220,6 +220,7 @@ const Profile = () => {
                     {alert}
                 </TemplateModalBody>
                 <TemplateModalAction
+                    activeRight={"Confirm"}
                     funcError={closeModal}
                     size="sm"
                 />

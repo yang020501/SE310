@@ -59,6 +59,7 @@ const initialState = {
     loading: false,
     user: user,
     value: {},
+    courses: [],
     err: null,
 }
 

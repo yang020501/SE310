@@ -101,7 +101,7 @@ export const TemplateModalAction = props => {
             {
                 props.activeRight ?
                     <div className={`template-modal-content-action-btn  ${props.size}`}>
-                        <MyButton type="submit" >Create</MyButton>
+                        <MyButton type="submit" >{props.activeRight}</MyButton>
                     </div>
                     :
                     <></>

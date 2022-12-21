@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
 import SearchBar from '../../components/SearchBar';
 import LineAction from '../../components/LineAction';
 import { useState } from 'react';
@@ -10,7 +9,6 @@ import Template, {
 } from '../../components/Template';
 import { Grid } from '@mui/material';
 import ClassCard from '../../components/ClassCard';
-import useMousePosition from '../../utils/mousePosition'
 import MiniPopup from '../../components/MiniPopup';
 
 const Classes = () => {
@@ -20,7 +18,7 @@ const Classes = () => {
     return (
         <Template>
             <TemplateSearch>
-                <SearchBar />
+                {/* <SearchBar /> */}
             </TemplateSearch>
             <TemplateTitle>CLASSES</TemplateTitle>
             <TemplateLineAction>

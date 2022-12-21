@@ -23,6 +23,7 @@ const NavbarHeader = props => {
             iconRef.current.classList.remove('active')
             window.removeEventListener('click', closeSideMenu)
         }
+        window.removeEventListener('click', closeSideMenu)
     }
     const menuToggle = () => {
         menuRef.current.classList.toggle('active')

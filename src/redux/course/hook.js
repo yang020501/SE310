@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchAllCourses } from './coursesSlice'
 import courseApi from '../../api/courseAPI'
 
@@ -15,12 +15,19 @@ export const useFetchAllCourses = () => {
     }, [])
 }
 
-export const useFetchAllStudentsAssigned = async (id) => {
-    const rs = await courseApi.fetchAllStudentsAssigned(id).catch(data => { return data.response })
+export const useFetchAllStudentsAssigned = (id) => {
+    const [result, setResult] = useState([])
+    const fetch = async () => {
+        const rs = await courseApi.fetchAllStudentsAssigned(id).catch(data => { return data.response })
+        if (rs.status < 200 || rs.status >= 300) {
+            setResult("false")
+            return
+        }
+        setResult(rs.data)
 
-    if (rs.status < 200 || rs.status >= 300) {
-        return rs.data
     }
-
-    return rs.data
-}
+    useEffect(() => {
+        fetch()
+    }, [])
+    return result
+}   

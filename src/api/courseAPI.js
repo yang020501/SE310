@@ -22,11 +22,13 @@ const courseApi = {
         return axiosClient.get(url)
     },
     fetchAllStudentsAssigned: (id) => {
-
+        const url = `/api/course-user/course-students/${id}`
+        return axiosClient.get(url)
     },
-    delteCourse: (id) => {
-        const url = `/api/courses/${id}`
-        return axiosClient.delete(url)
-    }
+    addStudentsForCourse: (body) => {
+        const url = `/api/course-user/add-students/`
+        return axiosClient.post(url, { ...body })
+    },
+
 }
 export default courseApi

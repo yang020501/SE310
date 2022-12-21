@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import notifyMessage from '../../utils/notifyMessage';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import { useCourses, useFetchAllCourses } from '../../redux/course/hook';
-import { addCourses, updateCourses } from '../../redux/course/coursesSlice';
+import { addCourses, deleteCourses, updateCourses } from '../../redux/course/coursesSlice';
 import { useLecturers, useFetchAllLecturers } from '../../redux/user/hook';
 import { findElementById } from '../../utils/uitility';
 import { useMemo } from 'react';
@@ -37,7 +37,7 @@ const Courses = props => {
 
   const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
   const [OpenAddLecturerModal, setOpenAddLecturerModal] = useState(false)
-  const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState(false)
+  const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState("")
   const [selectCourseID, setSelectCourseID] = useState("")
   const [selectLecturerID, setSelectLecturerID] = useState("")
   const [searchCourseData, setSearchCourseData] = useState([])
@@ -125,7 +125,33 @@ const Courses = props => {
             dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
         }
       }
+    }
+  }
+  const handleDeleteCourse = async () => {
+    // console.log("delete lectuererid: ", selectLecturerID);
+    // console.log("delete courseid: ", selectCourseID);
 
+    let course = findElementById(selectCourseID, Courses)
+    console.log(course);
+    if (!course) {
+      dispatch(setSnackbar(notifyMessage.ERROR("course is null!")))
+      return
+    }
+    if (window.confirm(`Delete course ${course.coursecode}-${course.coursename} ?`)) {
+
+      let rs = await courseApi.deleteCourse(course.id).catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("course", "Lecturer removed.")))
+        dispatch(deleteCourses(course))
+        if (searchCourseData.length > 0)
+          setSearchCourseData([])
+      }
+      else {
+        if (rs.status === 400)
+          dispatch(setSnackbar(notifyMessage.DELETE_FAIL("course", "Cannot delete this course.")))
+        else
+          dispatch(setSnackbar(notifyMessage.DELETE_FAIL("course")))
+      }
     }
 
   }
@@ -135,7 +161,7 @@ const Courses = props => {
     // console.log("add courseid: ", selectCourseID);
     let lecturer = findElementById(lecturerId, Lecturers)
     let course = findElementById(selectCourseID, Courses)
-    // console.log(lecturer, course);
+    console.log(lecturer, course);
     if (!lecturer && !course) {
       dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
       return
@@ -175,7 +201,7 @@ const Courses = props => {
           option: {
             type: "option",
             click: (courseId, lecturerId) => {
-              setOpenMiniPopupCourses(true)
+              setOpenMiniPopupCourses(courseId)
               setSelectCourseID(courseId)
               setSelectLecturerID(lecturerId)
             }
@@ -217,7 +243,7 @@ const Courses = props => {
         <MyDataGrid ColumnHeader={headers} Data={searchCourseData.length > 0 ? searchCourseData : rows} />
         <MiniPopup
           open={OpenMiniPopupCourses}
-          close={() => setOpenMiniPopupCourses(false)}
+          close={() => setOpenMiniPopupCourses("")}
           actions={[
             {
               name: "Manage student",
@@ -226,6 +252,10 @@ const Courses = props => {
             {
               name: "Remove lecturer",
               click: handleRemoveLecturer
+            },
+            {
+              name: "Delete",
+              click: handleDeleteCourse
             }
           ]}
         />
@@ -261,7 +291,7 @@ const Courses = props => {
             <Divider variant="middle" />
           </div>
         </TemplateModalBody>
-        <TemplateModalAction activeRight funcError={closeCreateCourseModal} size="sm" />
+        <TemplateModalAction activeRight={"Create"} funcError={closeCreateCourseModal} size="sm" />
       </TemplateModal>
       <TemplateModal
         open={OpenAddLecturerModal}
