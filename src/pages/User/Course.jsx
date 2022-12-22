@@ -27,7 +27,6 @@ const Course = () => {
   useFetchAllLecturers()
   useFetchAllCourses()
 
-
   let dispatch = useDispatch()
   const AssignedStudents = useFetchAllStudentsAssigned(courseId)
   const Students = useStudents()
@@ -36,21 +35,23 @@ const Course = () => {
 
   const [OpenAddStudentsModal, setOpenAddStudentsModal] = useState(false)
   const [OpenChangeLecturerModal, setOpenChangeLecturerModal] = useState(false)
+  const [OpenRemoveStudentsModal, setOpenRemoveStudentsModal] = useState(false)
   const [OpenMiniPopupCourse, setOpenMiniPopupCourse] = useState("")
   const [searchLecturersData, setSearchLecturersData] = useState([])
   const [searchStudentsAddedData, setSearchStudentsAddedData] = useState([])
+  const [searchStudentsRemovedData, setSearchStudentsRemovedData] = useState([])
   const [searchAssignedStudentsData, setSearchAssignedStudentsData] = useState([])
   const [studentsAddedRows, setStudentsAddedRows] = useState([])
+  const [studentsAssignedRows, setStudentsAssignedRows] = useState([])
   const [leturersRows, setLecturersRows] = useState([])
   const [checkStudents, setCheckStudents] = useState([])
   const course = findElementById(courseId, Courses)
   const lecturer = findElementById(course ? course.lecturerId : "", Lecturers)
   const assignedStudentsHeader = variable([
     "Id",
-    "User Name",
+    "Username",
     "Full Name",
     "Email",
-    "Option"
   ])
   const studentsHeaders = variable([
     "Username",
@@ -69,39 +70,104 @@ const Course = () => {
   const closeAddStudentsModal = () => setOpenAddStudentsModal(false)
   const openChangeLecturerModal = () => setOpenChangeLecturerModal(true)
   const closeChangeLecturerModal = () => setOpenChangeLecturerModal(false)
-
+  const openRemoveStudentsModal = () => setOpenRemoveStudentsModal(true)
+  const closeRemoveStudentsModal = () => setOpenRemoveStudentsModal(false)
   const CheckStudents = (id) => {
     setCheckStudents([...id])
+  }
+  const handleRemoveStudent = async (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    
+    if (checkStudents.length > 0) {
+      if (window.confirm(`Remove all students selected ?`)) {
+        let updateForm = {
+          courseId: courseId,
+          studentIdList: checkStudents
+        }
+        let rs = await courseApi.removeStudentsForCourse(updateForm).catch(data => { return data.response })
+        if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Students removed.")))
+        setOpenRemoveStudentsModal(false)
+
+        let newStudents = studentsAssignedRows.filter(item => { return !checkStudents.includes(item.id) })
+        newStudents = newStudents.map((item, index) => {
+          return {
+            ...item,
+            'no.': index + 1,
+            option: {
+              type: "option",
+              click: () => { }
+            }
+          }
+        })
+        setStudentsAssignedRows([
+          ...newStudents
+        ])
+        if (searchStudentsRemovedData.length > 0)
+          setSearchStudentsRemovedData([])
+        }
+        else {
+          if (rs.status === 400)
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot add this students.")))
+          else
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+        }
+      }
+    }
+    else {
+      dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "No students selected!")))
+    }
   }
   const handleAddStudents = async (event) => {
     event.preventDefault()
     event.stopPropagation()
     console.log(checkStudents);
-    let studentnameList = checkStudents.map(item => {
-      let tmp = findElementById(item, Students)
-      return tmp.username
-    })
-    console.log(studentnameList);
-    if (window.confirm(`Add all students selected ?`)) {
-      let updateForm = {
-        courseId: courseId,
-        studentnameList: studentnameList
-      }
-      console.log(updateForm);
-      let rs = await courseApi.addStudentsForCourse(updateForm).catch(data => { return data.response })
-      if (await rs.status === 200) {
+    // let studentnameList = checkStudents.map(item => {
+    //   let tmp = findElementById(item, Students)
+    //   return tmp.username
+    // })
+    // console.log(studentnameList);
+    if (checkStudents.length > 0) {
+      if (window.confirm(`Add all students selected ?`)) {
+        let updateForm = {
+          courseId: courseId,
+          studentIdList: checkStudents
+        }
+        let rs = await courseApi.addStudentsForCourse(updateForm).catch(data => { return data.response })
+        if (await rs.status === 200) {
         dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Students added.")))
         setOpenAddStudentsModal(false)
-        // dispatch(updateCourses(rs.data))
+
+        let newStudents = checkStudents.map((item, index) => {
+          return {
+            ...findElementById(item, Students),
+            'no.': studentsAssignedRows.length + index + 1,
+            option: {
+              type: "option",
+              click: (id) => {
+
+              }
+            }
+          }
+        })
+        setStudentsAssignedRows([
+          ...studentsAssignedRows,
+          ...newStudents
+        ])
         if (searchStudentsAddedData.length > 0)
           setSearchStudentsAddedData([])
+        }
+        else {
+          if (rs.status === 400)
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot add this students.")))
+          else
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+        }
       }
-      else {
-        if (rs.status === 400)
-          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Cannot add this students.")))
-        else
-          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
-      }
+    }
+    else {
+      dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "No students selected!")))
     }
   }
   const handleChangeLecturer = async (lecturerId) => {
@@ -136,12 +202,11 @@ const Course = () => {
   }
   useEffect(() => {
     if (Students.length > 0) {
-
-
       let tmp = Students.filter((item, index) => {
-        return AssignedStudents.findIndex(itemS => itemS === item.id) !== -1
+        return studentsAssignedRows.findIndex(itemS => itemS.id === item.id) === -1
       })
-      tmp = tmp.map((item,index) => {
+
+      tmp = tmp.map((item, index) => {
         return {
           ...item,
           'no.': index + 1,
@@ -156,7 +221,26 @@ const Course = () => {
       })
       setStudentsAddedRows([...tmp])
     }
-  }, [Students, AssignedStudents])
+
+  }, [Students, studentsAssignedRows])
+  useEffect(() => {
+    if (AssignedStudents.length > 0) {
+      let tmp = AssignedStudents.map((item, index) => {
+        return {
+          ...item,
+          'no.': index + 1,
+          option: {
+            type: "option",
+            click: (id) => {
+              // setOpenMiniPopupAccounts(true)
+              // setSelectID(id)
+            }
+          }
+        }
+      })
+      setStudentsAssignedRows([...tmp])
+    }
+  }, [AssignedStudents])
   useEffect(() => {
     if (Lecturers.length > 0) {
       let tmp = Lecturers.map((item, index) => {
@@ -177,7 +261,7 @@ const Course = () => {
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar data={assignedStudentsHeader} keyword={["fullName", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
+        <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
       </TemplateSearch>
       <TemplateTitle>{course ? `${course.coursecode} - ${course.coursename}` : ""}</TemplateTitle>
       <TemplateTitle>Lecturer: {lecturer ? lecturer.fullName : "No lecturer assigned"}</TemplateTitle>
@@ -193,18 +277,24 @@ const Course = () => {
           click={openAddStudentsModal}
         />
       </TemplateLineAction>
+      <TemplateLineAction>
+        <LineAction
+          name={"Remove assigned Students"}
+          click={openRemoveStudentsModal}
+        />
+      </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={assignedStudentsHeader} Data={AssignedStudents ? [] : []} />
-        <MiniPopup
+        <MyDataGrid ColumnHeader={assignedStudentsHeader} Data={searchAssignedStudentsData.length > 0 ? searchAssignedStudentsData : studentsAssignedRows} />
+        {/* <MiniPopup
           open={OpenMiniPopupCourse}
           close={() => setOpenMiniPopupCourse("")}
           actions={[
             {
               name: "Remove student",
-              click: null
+              click: handleRemoveStudent
             }
           ]}
-        />
+        /> */}
       </TemplateData>
       <TemplateModal
         open={OpenAddStudentsModal}
@@ -215,12 +305,36 @@ const Course = () => {
         <TemplateModalTitle>
           <SearchBar data={studentsAddedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsAddedData(data) }} />
         </TemplateModalTitle>
+        <TemplateModalTitle>
+          Add new Students
+        </TemplateModalTitle>
         <TemplateModalBody>
-          <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} searchStudentsData />
+          <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} />
         </TemplateModalBody>
         <TemplateModalAction
           activeRight={"Confirm"}
           funcError={closeAddStudentsModal}
+          size="lg"
+        />
+      </TemplateModal>
+      <TemplateModal
+        open={OpenRemoveStudentsModal}
+        size="lg"
+        form={true}
+        onsubmit={handleRemoveStudent}
+      >
+        <TemplateModalTitle>
+          <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsRemovedData(data) }} />
+        </TemplateModalTitle>
+        <TemplateModalTitle>
+          Remove assigned Students
+        </TemplateModalTitle>
+        <TemplateModalBody>
+          <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsRemovedData.length > 0 ? searchStudentsRemovedData : studentsAssignedRows} />
+        </TemplateModalBody>
+        <TemplateModalAction
+          activeRight={"Confirm"}
+          funcError={closeRemoveStudentsModal}
           size="lg"
         />
       </TemplateModal>

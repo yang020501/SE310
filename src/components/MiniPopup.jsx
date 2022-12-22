@@ -10,7 +10,9 @@ const MiniPopup = props => {
         if (!(valid.value === "gridoption")) {
             minipopupFunctionRef.current.classList.remove('show')
             props.close()
+            // window.removeEventListener('click', closeOptionMenu)
         }
+       
     }
     useEffect(() => {
         if (props.open !== "") {

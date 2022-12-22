@@ -11,6 +11,7 @@
         border-radius: 5px;
         // transform: scaleY(0);
         opacity: 0;
+        display: none;
         transition: opacity ease-out 0.25s;
         // visibility: hidden;
 
@@ -33,6 +34,7 @@
         }
     }
     .show {
+        display: flex;
         opacity: 1;
         transition: opacity ease-out 0.5s;
         z-index: 999;

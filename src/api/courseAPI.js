@@ -29,6 +29,10 @@ const courseApi = {
         const url = `/api/course-user/add-students/`
         return axiosClient.post(url, { ...body })
     },
+    removeStudentsForCourse: (body) => {
+        const url = `/api/course-user/remove-students/`
+        return axiosClient.patch(url, { ...body })
+    },
 
 }
 export default courseApi

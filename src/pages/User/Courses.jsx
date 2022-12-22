@@ -247,7 +247,14 @@ const Courses = props => {
           actions={[
             {
               name: "Manage student",
-              click: () => { navigate(`/courses/${selectCourseID}`) }
+              click: () => {
+                // let element = findElementById(selectCourseID, Courses)
+                // if (element)
+                //   navigate(`/courses/${element.coursecode}`)
+                // else {
+                  navigate(`/courses/${selectCourseID}`)
+                // }
+              }
             },
             {
               name: "Remove lecturer",
