@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import { fetchAllBlocks } from './blocksSlice'
+import blockApi from '../../api/blockAPI'
 
 
 
@@ -8,11 +10,24 @@ import { useEffect, useState } from 'react'
 export const useBlocks = () => useSelector((state) => state.blocksState.blocks)
 
 
-export const useFetchAllBlocks = () => {
-    const dispatch = useDispatch()
+export const useFetchAllBlocks = (data) => {
+    const [result, setResult] = useState([])
+    const fetch = async () => {
+
+        const rs = await blockApi.fetchAllBlocks(data).catch(data => { return data.response })
+
+        if (rs.status < 200 || rs.status >= 300) {
+            setResult("false")
+            return
+        }
+        setResult(rs.data)
+
+    }
 
     useEffect(() => {
-        dispatch(fetchAllCourses())
+        fetch()
     }, [])
+
+    return result
 }
 

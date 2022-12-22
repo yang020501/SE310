@@ -7,7 +7,7 @@ export const fetchAllBlocks = createAsyncThunk(
     'user/fetchAllBlocks',
     async (data, { rejectWithValue }) => {
 
-        const rs = await blockApi.fetchAllBlocks().catch(data => { return data.response })
+        const rs = await blockApi.fetchAllBlocks(data).catch(data => { return data.response })
 
         if (rs.status < 200 || rs.status >= 300) {
             return rejectWithValue(rs.data);

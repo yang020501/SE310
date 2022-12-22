@@ -39,8 +39,8 @@ function App() {
                 (role === "lecturer" || role === "student") ?
                   <React.Fragment>
                     <Route path="/courses" element={<Classes />} />
-                    <Route path="/courses/:id" element={<Class />} />
-                    <Route path="/courses/:id/:id" element={<ClassDetail />} />
+                    <Route path="/courses/:courseId" element={<Class />} />
+                    <Route path="/courses/:courseId/:blockId" element={<ClassDetail />} />
                   </React.Fragment> :
                   <></>
           }

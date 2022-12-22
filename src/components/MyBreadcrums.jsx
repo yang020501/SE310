@@ -9,6 +9,7 @@ const MyBreadcrums = props => {
     const courses = useCourses()
     const assignedcourses = useAssignedCourses()
     const role = useRole()
+
     const { pathname } = useLocation();
     const links = pathname.slice(1, pathname.length).split("/")
     // if (links.includes('courses')) {
@@ -18,7 +19,6 @@ const MyBreadcrums = props => {
     //             links[index + 1] = findElementById(links[index + 1], courses) ? findElementById(links[index + 1], courses).coursecode : 
     //     }
     // }
-    console.log(role);
     const changeIdtoName = (id) => {
         
         if (role === "lecturer" || role === "student") {

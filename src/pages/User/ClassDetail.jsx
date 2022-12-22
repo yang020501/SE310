@@ -8,13 +8,26 @@ import Template, {
     TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import onImagePasted from '../../utils/onImagePasted'
+import { useFetchAllAssignedCourses } from '../../redux/course/hook';
+import { useParams } from 'react-router-dom';
+import { useFetchAllBlocks } from '../../redux/block/hook';
+import { useRole } from '../../redux/user/hook';
+import MyButton from '../../components/MyButton';
 
 
 const ClassDetail = props => {
+    useFetchAllAssignedCourses()
+
+    const { courseId } = useParams("courseId")
+    const Role = useRole()
+    const Blocks = useFetchAllBlocks(courseId)
+
     const [value, setValue] = useState("")
     const [valueImage, setValueImage] = useState("")
-    const values = ""
+
+
     const onChange = (e) => {
+        console.log(value);
         setValue(e)
     }
 
@@ -63,42 +76,41 @@ const ClassDetail = props => {
             fr.readAsDataURL(file[0]);
         }
     }
-    console.log(value);
-    // useEffect(() => {
-    //     setValue("")
-    // }, [])
+
     return (
         <Template>
             <div className="classdetail-title">
-                {
-                    props.title ? props.title : "Introduction to OOADD"
-                }
-            </div>
-            <TemplateData>
-                <div className=" classdetail-md">
-                    <MarkdownEditor
-                        draggable={true}
-                        id="textareamd"
-                        // value={value}
-                        visible
-                        height='480px'
-                        // onChange={onChange}
-
-                        // onPaste={async (event) => {
-                        //     await onImagePasted(event.clipboardData, setValue);
-                        // }}
-                        // onDrag={async (event) => {
-                        //     await onImagePasted(event.dataTransfer, setValue);
-                        // }}
-                        onPaste={Paste}
-                        onDrop={Drop}
-                        onDragEnter={DragEnter}
-                        onDragOver={DragOver}
-                        onDragLeave={DragLeave}
-                    />
+                <div className='classdetail-title-txt'>
+                    {
+                        props.title ? props.title : "Introduction to OOADD"
+                    }
                 </div>
+                <MyButton size="lg" >Save</MyButton>
+            </div>
 
-            </TemplateData>
+            <div className=" classdetail-md">
+                <MarkdownEditor
+                    draggable={true}
+                    id="textareamd"
+                    value={value}
+                    visible
+                    height='480px'
+                    onChange={onChange}
+
+                    // onPaste={async (event) => {
+                    //     await onImagePasted(event.clipboardData, setValue);
+                    // }}
+                    // onDrag={async (event) => {
+                    //     await onImagePasted(event.dataTransfer, setValue);
+                    // }}
+                    onPaste={Paste}
+                    onDrop={Drop}
+                    onDragEnter={DragEnter}
+                    onDragOver={DragOver}
+                    onDragLeave={DragLeave}
+                />
+            </div>
+
         </Template>
 
     )

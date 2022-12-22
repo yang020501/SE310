@@ -9,10 +9,13 @@ const ClassCard = props => {
     const Click = props.click ? props.click : null
     return (
         <React.Fragment>
-            <div className='classcard' >
-                <div className="classcard-option">
-                    <DataGridOptions click={optionClick} />
-                </div>
+            <div className='classcard' onClick={Click}>
+                {Click ? <></>
+                    :
+                    <div className="classcard-option">
+                        <DataGridOptions click={optionClick} />
+                    </div>
+                }
                 <div className="classcard-avatar" >
                     <Avatar variant='square'>{props.code}</Avatar>
                 </div>

@@ -10,18 +10,21 @@ import Template, {
 import { Grid } from '@mui/material';
 import ClassCard from '../../components/ClassCard';
 import MiniPopup from '../../components/MiniPopup';
-import { useAssignedCourses, useFetchAllAssignedCourses } from '../../redux/course/hook';
+import { useAssignedCourses, useFetchAllAssignedCourses, useFetchAllCourses } from '../../redux/course/hook';
 import { useNavigate } from 'react-router-dom';
+import { useRole } from '../../redux/user/hook';
 
 const Classes = () => {
     useFetchAllAssignedCourses()
 
     let navigate = useNavigate()
     const AssignedCourses = useAssignedCourses()
-    console.log(AssignedCourses);
+    const Role = useRole()
+
     const [OpenMiniPopupClasses, setOpenMiniPopupClasses] = useState("")
     const [assignedCourses, setAssignedCourses] = useState([])
     const [selectedID, setSelcetedID] = useState("")
+    const [searchCoursesData, setSearchCoursesData] = useState([])
     useEffect(() => {
         if (AssignedCourses.length > 0) {
             setAssignedCourses([...AssignedCourses])
@@ -30,9 +33,9 @@ const Classes = () => {
     return (
         <Template>
             <TemplateSearch>
-                {/* <SearchBar /> */}
+                <SearchBar data={assignedCourses} keyword={["coursename", "coursecode"]} onsearch={(data) => { setSearchCoursesData(data) }} />
             </TemplateSearch>
-            <TemplateTitle>CLASSES</TemplateTitle>
+            <TemplateTitle>COURSES</TemplateTitle>
             {/* <TemplateLineAction>
                 <LineAction
                     name={"Show hidden classes"}
@@ -43,33 +46,76 @@ const Classes = () => {
             <TemplateData>
 
                 <Grid container spacing={2} >
+
                     {
-                        assignedCourses.map((item, index) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <Grid item lg={3}>
-                                        <ClassCard name={item.coursename} code={item.coursecode} optionclick={() => {
-                                            setOpenMiniPopupClasses(item.id)
-                                            setSelcetedID(item.id)
-                                        }} />
-                                    </Grid>
-                                </React.Fragment>
-                            )
-                        })
+                        Role === "lecturer" ?
+                            searchCoursesData.length > 0 ?
+                                searchCoursesData.map((item, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid item lg={3}>
+                                                <ClassCard name={item.coursename} code={item.coursecode} optionclick={() => {
+                                                    setOpenMiniPopupClasses(item.id)
+                                                    setSelcetedID(item.id)
+                                                }} />
+                                            </Grid>
+                                        </React.Fragment>
+                                    )
+                                })
+                                :
+                                assignedCourses.map((item, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid item lg={3}>
+                                                <ClassCard name={item.coursename} code={item.coursecode} optionclick={() => {
+                                                    setOpenMiniPopupClasses(item.id)
+                                                    setSelcetedID(item.id)
+                                                }} />
+                                            </Grid>
+                                        </React.Fragment>
+                                    )
+                                })
+                            :
+                            searchCoursesData.length > 0 ?
+                                searchCoursesData.map((item, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid item lg={3}>
+                                                <ClassCard name={item.coursename} code={item.coursecode} click={() => {navigate(item.id)}}/>
+                                            </Grid>
+                                        </React.Fragment>
+                                    )
+                                })
+                                :
+                                assignedCourses.map((item, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid item lg={3}>
+                                                <ClassCard name={item.coursename} code={item.coursecode} click={() => {navigate(item.id)}} />
+                                            </Grid>
+                                        </React.Fragment>
+                                    )
+                                })
+
                     }
                 </Grid>
-                <MiniPopup
-                    open={OpenMiniPopupClasses}
-                    close={() => setOpenMiniPopupClasses("")}
-                    actions={[
-                        {
-                            name: "Manage Course",
-                            click: () => {
-                                navigate( `${selectedID}`)
-                            }
-                        }
-                    ]}
-                />
+                {
+                    Role === "lecturer" ?
+                        <MiniPopup
+                            open={OpenMiniPopupClasses}
+                            close={() => setOpenMiniPopupClasses("")}
+                            actions={[
+                                {
+                                    name: "Manage Course",
+                                    click: () => {
+                                        navigate(`${selectedID}`)
+                                    }
+                                }
+                            ]}
+                        />
+                        : <></>
+                }
+
             </TemplateData>
         </Template>
     )

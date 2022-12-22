@@ -23,7 +23,7 @@ const ProtectedRoute = () => {
                 <MySnackbar />
             </React.Fragment>
             :
-            <Navigate to='/login' />
+            <Navigate to='/login'  />
     )
 }
 
