@@ -56,7 +56,6 @@ const Profile = () => {
         }
 
     }
-    console.log(userForm);
     const onChange = (e) => {
         if (e.target.name === "dateOfBirth")
             setUserForm({
@@ -149,7 +148,7 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className='image'>
-                        <Avatar id="avatar" alt="Avatar" variant='rounded' src={userForm.avatar} />
+                        <Avatar id="avatar" alt="Avatar" variant='rounded' src={userForm.avatar} >{userForm.fullName ? userForm.fullName.charAt(0) : "User"}</Avatar>
                     </div>
                 </div>
                 <div className='role'>

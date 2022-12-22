@@ -25,6 +25,7 @@ const NavbarHeader = props => {
         }
         window.removeEventListener('click', closeSideMenu)
     }
+
     const menuToggle = () => {
         menuRef.current.classList.toggle('active')
         iconRef.current.classList.toggle('active')
@@ -44,12 +45,14 @@ const NavbarHeader = props => {
 
                 </div>
             </div>
+
             <div className="navbarheader-side">
                 <div className="navbarheader-side-sidemenu" ref={menuRef}>
                     <div className="navbarheader-side-sidemenu-header">
                         <div className="navbarheader-side-sidemenu-header-item bold">
                             <div>
-                                <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : require('../asset/pictures/avatar.jpg')} > N</Avatar>
+                                {/* <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : require('../asset/pictures/avatar.jpg')} > N</Avatar> */}
+                                <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : ""}> {userValue.fullName ? userValue.fullName.charAt(0) : "User"}</Avatar>
                             </div>
                             {userValue.fullName ? userValue.fullName : "User"}
                         </div>
@@ -85,15 +88,19 @@ const NavbarHeader = props => {
                                             Courses
                                         </Link>
                                     </div>
+                                    // :
+                                    // (role === "lecturer" || role === "student") ?
+                                    //     <div className="navbarheader-side-sidemenu-body-item">
+                                    //         <Link to={"/classes"}>
+                                    //             Classes
+                                    //         </Link>
+                                    //     </div>
                                     :
-                                    (role === "lecturer" || role === "student") ?
-                                        <div className="navbarheader-side-sidemenu-body-item">
-                                            <Link to={"/classes"}>
-                                                Classes
-                                            </Link>
-                                        </div>
-                                        :
-                                        <></>
+                                    <div className="navbarheader-side-sidemenu-body-item">
+                                        <Link to={"/courses"}>
+                                            Courses
+                                        </Link>
+                                    </div>
                         }
                     </div>
                 </div>

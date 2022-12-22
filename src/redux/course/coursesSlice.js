@@ -14,9 +14,22 @@ export const fetchAllCourses = createAsyncThunk(
         return rs.data
     }
 )
+export const fetchAllAssignedCourses = createAsyncThunk(
+    'user/fetchAllAssignedCourses',
+    async (data, { rejectWithValue }) => {
+
+        const rs = await courseApi.fetchAllAssignedCourses().catch(data => { return data.response })
+
+        if (rs.status < 200 || rs.status >= 300) {
+            return rejectWithValue(rs.data);
+        }
+        return rs.data
+    }
+)
 
 const initialState = {
-    courses: []
+    courses: [],
+    assignedcourses: []
 }
 
 
@@ -64,6 +77,16 @@ const coursesSlice = createSlice({
 
         })
         builder.addCase(fetchAllCourses.rejected, (state, action) => {
+
+        })
+        builder.addCase(fetchAllAssignedCourses.pending, state => {
+
+        })
+        builder.addCase(fetchAllAssignedCourses.fulfilled, (state, action) => {
+            state.assignedcourses = action.payload
+
+        })
+        builder.addCase(fetchAllAssignedCourses.rejected, (state, action) => {
 
         })
     }

@@ -59,7 +59,6 @@ const initialState = {
     loading: false,
     user: user,
     value: {},
-    courses: [],
     err: null,
 }
 
@@ -89,7 +88,7 @@ const userSlice = createSlice({
             state.loading = false
             state.user = action.payload
             state.err = null
-            // axios.AxiosHeaders. .defaults.headers['Authorization'] = "Bearer " + action.payload.token
+          
             localStorage.setItem('user', JSON.stringify(action.payload))
         })
         builder.addCase(login.rejected, (state, action) => {

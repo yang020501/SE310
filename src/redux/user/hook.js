@@ -7,6 +7,7 @@ import { fetchAllLecturers, fetchAllStudents, fetchAllUsers } from './allUsersSl
 export const useUserState = () => useSelector((state) => state.userState)
 export const useUserStateValue = () => useSelector((state) => state.userState.value)
 export const useUsers = () => useSelector((state) => state.allUsersState.users)
+export const useRole = () => useSelector((state) => state.userState.user.role)
 export const useLecturers = () => useSelector((state) => state.allUsersState.lecturers)
 export const useStudents = () => useSelector((state) => state.allUsersState.students)
 

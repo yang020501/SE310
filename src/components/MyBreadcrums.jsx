@@ -2,10 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Breadcrumbs } from '@mui/material/'
 import { useLocation, Link } from "react-router-dom"
-import { useCourses } from '../redux/course/hook'
+import { useAssignedCourses, useCourses } from '../redux/course/hook'
 import { findElementById } from '../utils/uitility'
+import { useRole } from '../redux/user/hook'
 const MyBreadcrums = props => {
     const courses = useCourses()
+    const assignedcourses = useAssignedCourses()
+    const role = useRole()
     const { pathname } = useLocation();
     const links = pathname.slice(1, pathname.length).split("/")
     // if (links.includes('courses')) {
@@ -15,10 +18,19 @@ const MyBreadcrums = props => {
     //             links[index + 1] = findElementById(links[index + 1], courses) ? findElementById(links[index + 1], courses).coursecode : 
     //     }
     // }
+    console.log(role);
     const changeIdtoName = (id) => {
-        let element = findElementById(id, courses)
-        if (element)
-            return element.coursecode
+        
+        if (role === "lecturer" || role === "student") {
+            let element = findElementById(id, assignedcourses)
+            if (element)
+                return element.coursecode
+        }
+        else if (role === "mod") {
+            let element = findElementById(id, courses)
+            if (element)
+                return element.coursecode
+        }
         return ""
     }
     return (

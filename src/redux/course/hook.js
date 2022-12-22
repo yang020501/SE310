@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { fetchAllCourses } from './coursesSlice'
+import { fetchAllAssignedCourses, fetchAllCourses } from './coursesSlice'
 import courseApi from '../../api/courseAPI'
 
 
 
 export const useCourses = () => useSelector((state) => state.coursesState.courses)
+export const useAssignedCourses = () => useSelector((state) => state.coursesState.assignedcourses)
 
 export const useFetchAllCourses = () => {
     const dispatch = useDispatch()
@@ -14,7 +15,13 @@ export const useFetchAllCourses = () => {
         dispatch(fetchAllCourses())
     }, [])
 }
+export const useFetchAllAssignedCourses = () => {
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(fetchAllAssignedCourses())
+    }, [])
+}
 export const useFetchAllStudentsAssigned = (id) => {
     const [result, setResult] = useState([])
     const fetch = async () => {

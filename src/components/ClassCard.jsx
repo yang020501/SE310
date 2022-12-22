@@ -6,20 +6,19 @@ import DataGridOptions from './DataGridOptions';
 
 const ClassCard = props => {
     const optionClick = props.optionclick ? props.optionclick : null
-
+    const Click = props.click ? props.click : null
     return (
-        <React.Fragment>           
-            <div className='classcard'>
+        <React.Fragment>
+            <div className='classcard' >
                 <div className="classcard-option">
                     <DataGridOptions click={optionClick} />
                 </div>
-                <div className="classcard-avatar">
-                    <Avatar variant='square'>SE100</Avatar>
+                <div className="classcard-avatar" >
+                    <Avatar variant='square'>{props.code}</Avatar>
                 </div>
-                <div className="classcard-name">
-                    Phuong phap phat trien ...
+                <div className="classcard-name" >
+                    {props.name}
                 </div>
-
             </div>
         </React.Fragment>
 
@@ -28,8 +27,9 @@ const ClassCard = props => {
 
 ClassCard.propTypes = {
     name: PropTypes.string,
-    id: PropTypes.string,
-    optionclick: PropTypes.func
+    optionclick: PropTypes.func,
+    click: PropTypes.func,
+    code: PropTypes.string
 }
 
 export default ClassCard

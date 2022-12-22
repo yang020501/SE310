@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import blocksSlice from "./block/blocksSlice";
 import coursesSlice from "./course/coursesSlice";
 import snackbarSlice from "./snackbar/snackbarSlice";
 import allUsersSlice from "./user/allUsersSlice";
@@ -10,7 +11,8 @@ export const store = configureStore({
         userLoginLoading: loginLoadingSlice,
         snackbarState: snackbarSlice,
         allUsersState: allUsersSlice,
-        coursesState: coursesSlice
+        coursesState: coursesSlice,
+        blocksState: blocksSlice
     },
     devTools: true
 })
