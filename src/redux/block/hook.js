@@ -10,7 +10,7 @@ import blockApi from '../../api/blockAPI'
 export const useBlocks = () => useSelector((state) => state.blocksState.blocks)
 
 
-export const useFetchAllBlocks = (data) => {
+export const useFetchAllBlocks = (data,change) => {
     const [result, setResult] = useState([])
     const fetch = async () => {
 
@@ -26,7 +26,7 @@ export const useFetchAllBlocks = (data) => {
 
     useEffect(() => {
         fetch()
-    }, [])
+    }, [change])
 
     return result
 }

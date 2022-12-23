@@ -4,7 +4,7 @@ import DataGridOptions from './DataGridOptions';
 import ArticleIcon from '@mui/icons-material/Article';
 const ClassBlock = props => {
     const optionClick = props.click ? props.click : null
-    const nav = props.clicknav ? props.clicknav: null
+    const nav = props.clicknav ? props.clicknav : null
     return (
         <div className="datagrid">
             <div className='classblock'>
@@ -14,9 +14,13 @@ const ClassBlock = props => {
                 <div className="classblock-name" onClick={nav}>
                     {props.name}
                 </div>
-                <div className="classblock-option">
-                    <DataGridOptions click={optionClick} />
-                </div>
+                {optionClick ?
+                    <div className="classblock-option">
+                        <DataGridOptions click={optionClick} />
+                    </div>
+                    :
+                    <></>
+                }
 
             </div>
         </div>
