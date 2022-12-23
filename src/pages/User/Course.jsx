@@ -252,7 +252,6 @@ const Course = () => {
       setLecturersRows([...tmp])
     }
   }, [Lecturers])
-  console.log(AssignedStudents);
   return (
     AssignedStudents === "false" ?
       <Navigate to="/courses" />
