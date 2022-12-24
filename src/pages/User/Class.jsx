@@ -146,7 +146,7 @@ const Class = () => {
         </TemplateSearch>
         <TemplateTitle>
           {`${course.coursecode} - ${course.coursename}`}
-          </TemplateTitle>
+        </TemplateTitle>
         {
 
           Role === "lecturer" ?
@@ -170,7 +170,7 @@ const Class = () => {
                         return (
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
-                              <ClassBlock name={`Lession ${index + 1} - ${item.name}`} clicknav={() => {
+                              <ClassBlock name={`${item.name}`} clicknav={() => {
                                 navigate(item.id)
                               }} click={() => {
                                 setOpenMiniPopupClass(item.id)
@@ -186,7 +186,7 @@ const Class = () => {
                         return (
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
-                              <ClassBlock name={`Lession ${index + 1} - ${item.name}`} clicknav={() => {
+                              <ClassBlock name={`${item.name}`} clicknav={() => {
                                 navigate(item.id)
                               }} click={() => {
                                 setOpenMiniPopupClass(item.id)
@@ -196,7 +196,7 @@ const Class = () => {
                           </React.Fragment>
 
                         )
-                      })
+                      }).reverse()
                   }
                 </Grid>
                 <MiniPopup
@@ -256,7 +256,7 @@ const Class = () => {
                         return (
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
-                              <ClassBlock name={`Lession ${index + 1} - ${item.name}`} clicknav={() => {
+                              <ClassBlock name={`${item.name}`} clicknav={() => {
                                 navigate(item.id)
                               }} />
                             </Grid>
@@ -269,14 +269,14 @@ const Class = () => {
                         return (
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
-                              <ClassBlock name={`Lession ${index + 1} - ${item.name}`} clicknav={() => {
+                              <ClassBlock name={`${item.name}`} clicknav={() => {
                                 navigate(item.id)
                               }} />
                             </Grid>
                           </React.Fragment>
 
                         )
-                      })
+                      }).reverse()
                   }
                 </Grid>
               </TemplateData>
