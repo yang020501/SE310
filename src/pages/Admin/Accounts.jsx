@@ -38,7 +38,7 @@ const Accounts = () => {
   const [openNewAccountModal, setopenNewAccountModal] = useState(false)
   const [alert, setAlert] = useState(null)
   const [rows, setRows] = useState([])
-  const [OpenMiniPopupAccounts, setOpenMiniPopupAccounts] = useState(false)
+  const [OpenMiniPopupAccounts, setOpenMiniPopupAccounts] = useState("")
   const [selectID, setSelectID] = useState("")
   const [searchData, setSearchData] = useState([])
   const headers = variable([
@@ -119,7 +119,7 @@ const Accounts = () => {
         option: {
           type: "option",
           click: (id) => {
-            setOpenMiniPopupAccounts(true)
+            setOpenMiniPopupAccounts(id)
             setSelectID(id)
           }
         }
@@ -142,7 +142,7 @@ const Accounts = () => {
         <MyDataGrid ColumnHeader={headers} Data={searchData.length > 0 ? searchData : rows} />
         <MiniPopup
           open={OpenMiniPopupAccounts}
-          close={() => setOpenMiniPopupAccounts(false)}
+          close={() => setOpenMiniPopupAccounts("")}
           actions={[
             {
               name: "Delete account",
