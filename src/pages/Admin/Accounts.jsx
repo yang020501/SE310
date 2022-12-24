@@ -235,7 +235,7 @@ const Accounts = () => {
           </div>
         </TemplateModalBody>
         <TemplateModalAction
-          activeRight
+          activeRight={"Create"}
           size="sm"
           funcError={() => { setopenNewAccountModal(false) }}
         />
