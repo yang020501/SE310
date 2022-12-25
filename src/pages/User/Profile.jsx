@@ -1,143 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Divider from '@mui/material/Divider';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { TemplateModal, TemplateModalBody, TemplateModalAction } from '../../components/Template';
 import { Avatar } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import MyButton from '../../components/MyButton';
-import { useRef } from 'react';
-import { useFetchUser, useUserState } from '../../redux/user/hook';
-import { useDispatch } from 'react-redux'
-import { useEffect } from 'react';
+import { useUserState } from '../../redux/user/hook';
 import { Box } from '@mui/system';
-import { updateUserValue } from '../../redux/user/userSlice';
-import userApi from '../../api/userAPI';
-import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
-import notifyMessage from '../../utils/notifyMessage';
-import MyAlert from '../../components/MyAlert';
-import { parseToISOSDate, parseToLocalDate } from '../../utils/parseDate';
+import { parseToLocalDate } from '../../utils/parseDate';
+import useUpdateProfile from '../../hooks/useUpdateProfile';
+import useUpdatePassword from '../../hooks/useUpdatePassword';
 
 const Profile = () => {
-
-    useFetchUser()
-    let dispatch = useDispatch()
-    const userState = useUserState()
-    const pictureRef = useRef(null)
-    const initialPasswordForm = {
-        username: userState.value.username ? userState.value.username : "",
-        oldPassword: "",
-        newPassword: "",
-        renewPassword: ""
-    }
-    const initialUserForm = {
-        fullName: "",
-        email: "",
-        dateOfBirth: ""
-    }
-    const [userForm, setUserForm] = useState(initialUserForm)
-    const [passwordForm, setPasswordForm] = useState(initialPasswordForm)
-    const [open, setOpen] = useState(false)
-    const [alert, setAlert] = useState(null)
-    const { fullName, email, dateOfBirth } = userForm
-    const { oldPassword, newPassword, renewPassword } = passwordForm
-    const uploadPicture = () => pictureRef.current.click()
-    const onAvatarChange = (e) => {
-        var file = e.target.files
-        if (FileReader && file && file.length) {
-            var fr = new FileReader();
-            fr.onload = function () {
-                document.getElementById('avatar').childNodes[0].src = fr.result;
-                setUserForm({
-                    ...userForm,
-                    'avatar': fr.result
-                })
-            }
-            fr.readAsDataURL(file[0]);
-        }
-
-    }
-    const onChange = (e) => {
-        if (e.target.name === "dateOfBirth")
-            setUserForm({
-                ...userForm,
-                [e.target.name]: parseToISOSDate(e.target.value)
-            })
-        else {
-            setUserForm({
-                ...userForm,
-                [e.target.name]: e.target.value
-            })
-        }
-
-    }
-    const onPasswordFormChange = (e) => {
-        setPasswordForm({
-            ...passwordForm,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    const openModal = () => setOpen(true)
-    const closeModal = () => setOpen(false)
-    const checkPasswordChange = () => {
-        return oldPassword === newPassword ? 1 : newPassword === renewPassword ? 0 : 2
-    }
-    const handleSubmitChangePassword = async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        let rs = checkPasswordChange()
-
-        if (rs === 1)
-            setAlert(<MyAlert type={"error"} message="New password can't be the same with current password!" close={() => { setAlert(null) }} />)
-        else if (rs === 2)
-            setAlert(<MyAlert type={"error"} message="Re-New Password differ to New Password!" close={() => { setAlert(null) }} />)
-        else {
-            if (window.confirm("Change your password?")) {
-                let rs = await userApi.changePasswordUser(passwordForm).catch(data => { return data.response })
-                if (await rs.status === 200) {
-                    setOpen(false)
-                    dispatch(updateUserValue(rs.data))
-                    dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("password")))
-
-                }
-                else {
-                    if (rs.status === 400)
-                        dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("password", "Current password is incorrect.")))
-                    else
-                        dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("password", "Try again")))
-                }
-            }
-        }
-    }
-
-    const handleUpdate = async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-
-        if (window.confirm("Update user profile?")) {
-            let rs = await userApi.updateUser(userForm).catch(data => { return data.response })
-            if (await rs.status === 200) {
-                dispatch(updateUserValue(rs.data))
-                dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("user")))
-                closeModal()
-            }
-            else {
-                dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("user")))
-            }
-        }
-    }
-    useEffect(() => {
-        if (Object.keys(userState.value).length) {
-            setPasswordForm({ ...passwordForm, username: userState.value.username })
-            setUserForm({ ...userState.value })
-        }
-    }, [userState])
-    useEffect(() => {
-        setPasswordForm({ ...initialPasswordForm })
-    }, [open])
+    //tai sao k xoa luon cai global state ten userState nay luon?
+    //Don gian la vi ca 2 cai hook useUpdateProfile va useUpdatePassword deu can userState, thay vi 
+    //goi o ca 2 hook thi goi me o day luon cho tien. Anti-Pattern qua thi xoa luon cung dc, goi 2 lan thoi xD
+    const userState = useUserState();
+    const {userForm, pictureRef, fullName, email, dateOfBirth, onChange, onAvatarChange, handleUpdate, uploadPicture} = useUpdateProfile(userState);
+    const {oldPassword, newPassword, renewPassword, onPasswordFormChange, open, openModal, closeModal, alert, handleSubmitChangePassword} = useUpdatePassword(userState);
 
     return (
-
         <div className='profile'>
             <div className="profile-item">
                 <div className='image-container'>
