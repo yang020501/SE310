@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUserValue } from '../redux/user/userSlice';
-import userApi from '../api/userAPI';
-import { setSnackbar } from '../redux/snackbar/snackbarSlice';
-import notifyMessage from '../utils/notifyMessage';
-import MyAlert from '../components/MyAlert';
+import { updateUserValue } from '../../redux/user/userSlice';
+import userApi from '../../api/userAPI';
+import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
+import notifyMessage from '../../utils/notifyMessage';
+import MyAlert from '../../components/MyAlert';
 
 const useUpdatePassword = (userState) => {
     let dispatch = useDispatch();

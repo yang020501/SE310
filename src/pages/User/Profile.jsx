@@ -8,8 +8,8 @@ import MyButton from '../../components/MyButton';
 import { useUserState } from '../../redux/user/hook';
 import { Box } from '@mui/system';
 import { parseToLocalDate } from '../../utils/parseDate';
-import useUpdateProfile from '../../hooks/useUpdateProfile';
-import useUpdatePassword from '../../hooks/useUpdatePassword';
+import useUpdateProfile from '../../hooks/ProfilePageHooks/useUpdateProfile';
+import useUpdatePassword from '../../hooks/ProfilePageHooks/useUpdatePassword';
 
 const Profile = () => {
     //tai sao k xoa luon cai global state ten userState nay luon?

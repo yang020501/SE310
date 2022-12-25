@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUserValue } from '../redux/user/userSlice';
-import userApi from '../api/userAPI';
-import { setSnackbar } from '../redux/snackbar/snackbarSlice';
-import notifyMessage from '../utils/notifyMessage';
-import { parseToISOSDate } from '../utils/parseDate';
+import { updateUserValue } from '../../redux/user/userSlice';
+import userApi from '../../api/userAPI';
+import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
+import notifyMessage from '../../utils/notifyMessage';
+import { parseToISOSDate } from '../../utils/parseDate';
 
 const useUpdateProfile = (userState) => {
     let dispatch = useDispatch()
