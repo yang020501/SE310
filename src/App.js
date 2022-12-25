@@ -14,6 +14,7 @@ import Classes from "./pages/User/Classes";
 import ClassDetail from "./pages/User/ClassDetail";
 import { useSelector } from 'react-redux';
 import React,{useEffect} from "react";
+import HookTesting from "./pages/HookTesting";
 
 function App() {
   
@@ -24,6 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/test" element={<HookTesting/>}/>
         <Route index path="/" element={<Landing />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
