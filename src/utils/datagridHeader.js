@@ -24,3 +24,17 @@ export const LecturerHeaders = variable([
     "Role",
     "Option"
 ])
+
+export const assignedStudentsHeader = variable([
+  "Id",
+  "Username",
+  "Full Name",
+  "Email",
+])
+
+export const studentsHeaders = variable([
+  "Username",
+  "Full Name",
+  "Email",
+  "Role"
+])

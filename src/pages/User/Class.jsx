@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Template, {
   TemplateTitle, TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
@@ -11,130 +11,27 @@ import MiniPopup from '../../components/MiniPopup';
 import { Divider, Grid, Input } from '@mui/material';
 import { useFetchAllBlocks } from '../../redux/block/hook';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { useAssignedCourses, useFetchAllAssignedCourses } from '../../redux/course/hook';
-import { findElementById } from '../../utils/uitility';
-import notifyMessage from '../../utils/notifyMessage';
-import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
-import { useDispatch } from 'react-redux';
-import blockApi from '../../api/blockAPI';
 import { useRole } from '../../redux/user/hook';
+import useGetCourseName from '../../hooks/ClassHook/useGetCourseName';
+import useSubmitBlock from '../../hooks/ClassHook/useSubmitBlock';
+import useDeleteBlock from '../../hooks/ClassHook/useDeleteBlock';
 const Class = () => {
-  let dispatch = useDispatch()
   let navigate = useNavigate()
-  useFetchAllAssignedCourses()
   const { courseId } = useParams("courseId")
   const Role = useRole()
   const Blocks = useFetchAllBlocks(courseId)
-  const Courses = useAssignedCourses()
-  const initialForm = {
-    courseId: courseId,
-    name: ""
-  }
-
-  const [OpenMiniPopupClass, setOpenMiniPopupClass] = useState("")
-  const [openBlockModal, setOpenBlockModal] = useState(false)
-  const [blocksRows, setBlocksRows] = useState([])
-  const [course, setCourse] = useState({})
-  const [searchBlocksData, setSearchBlocksData] = useState([])
-  const [blockForm, setBlockForm] = useState(initialForm)
+  const {course} = useGetCourseName(courseId);
+  const [blocksRows, setBlocksRows] = useState([]);
   const [mode, setMode] = useState("")
+  const [OpenMiniPopupClass, setOpenMiniPopupClass] = useState("")
+  const { handleBlockSubmit, blockForm, setBlockForm, name, onBlockFormChange, searchBlocksData, setSearchBlocksData,
+    openBlockModal, setOpenBlockModal } = useSubmitBlock(Blocks, courseId, mode, blocksRows, setBlocksRows)
+  const {handleDeleteBlock} = useDeleteBlock(Blocks, blocksRows, setBlocksRows, searchBlocksData, setSearchBlocksData, blockForm)
 
 
-  const { name } = blockForm
   const OpenBlockModal = () => setOpenBlockModal(true)
   const CloseBlockModal = () => setOpenBlockModal(false)
-  const onBlockFormChange = (e) => {
-    setBlockForm({
-      ...blockForm,
-      [e.target.name]: e.target.value
-    })
-  }
-  const handleDeleteBlock = async () => {
-
-    if (window.confirm(`Delete this block?`)) {
-
-
-      let rs = await blockApi.deleteBlock(blockForm.id).catch(data => { return data.response })
-      if (await rs.status === 200) {
-
-        dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("block")))
-        let index = blocksRows.findIndex(item => item.id === blockForm.id)
-        let tmp = blocksRows
-        tmp.splice(index, 1)
-        setBlocksRows([...tmp])
-
-        if (searchBlocksData.length > 0)
-          setSearchBlocksData([])
-      }
-      else {
-        if (rs.status === 400)
-          dispatch(setSnackbar(notifyMessage.DELETE_FAIL("block", "Cannot delete block.")))
-        else
-          dispatch(setSnackbar(notifyMessage.DELETE_FAIL("block")))
-
-      }
-    }
-  }
-
-  const handleBlockSubmit = async (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    if (window.confirm(`Confirm to ${mode === "New" ? "create new" : "update "} block?`)) {
-      let rs
-      if (mode === "New")
-        rs = await blockApi.createBlock(blockForm).catch(data => { return data.response })
-      else
-        rs = await blockApi.updateBlock(blockForm).catch(data => { return data.response })
-      if (await rs.status === 200) {
-        if (mode === "New") {
-          setBlocksRows([...blocksRows, rs.data])
-          dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("block", "Block added.")))
-        }
-        else {
-          let index = blocksRows.findIndex(item => item.id === rs.data)
-          let tmp = blocksRows
-          tmp[index] = {
-            name: blockForm.name,
-            markdownDocument: blockForm.markdownDocument,
-            id: blockForm.id
-          }
-          setBlocksRows([...tmp])
-          dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("block")))
-        }
-        setOpenBlockModal(false)
-
-        if (searchBlocksData.length > 0)
-          setSearchBlocksData([])
-      }
-      else {
-        if (mode === "New") {
-          if (rs.status === 400)
-            dispatch(setSnackbar(notifyMessage.CREATE_FAIL("block", "Cannot create block.")))
-          else
-            dispatch(setSnackbar(notifyMessage.CREATE_FAIL("block")))
-        } else {
-          dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("block")))
-        }
-      }
-    }
-  }
-  useEffect(() => {
-    if (Blocks.length > 0 && Blocks !== "false") {
-      setBlocksRows([...Blocks])
-    }
-  }, [Blocks])
-  useEffect(() => {
-    if (Courses.length > 0) {
-      let tmp = findElementById(courseId, Courses)
-      setCourse({ ...tmp })
-    }
-  }, [Courses])
-  useEffect(() => {
-    if (mode === "New") {
-      setBlockForm(initialForm)
-    }
-  }, [mode])
+ 
 
   return (
     Blocks === "false" ?

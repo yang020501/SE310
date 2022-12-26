@@ -1,36 +1,23 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import SearchBar from '../../components/SearchBar';
-import LineAction from '../../components/LineAction';
 import { useState } from 'react';
-import Template, {
-    TemplateTitle, TemplateLineAction, TemplateData,
-    TemplateSearch, TemplateModal, TemplateModalTitle,
-    TemplateModalBody, TemplateModalAction
-} from '../../components/Template';
+import Template, { TemplateTitle, TemplateData, TemplateSearch } from '../../components/Template';
 import { Grid } from '@mui/material';
 import ClassCard from '../../components/ClassCard';
 import MiniPopup from '../../components/MiniPopup';
-import { useAssignedCourses, useFetchAllAssignedCourses, useFetchAllCourses } from '../../redux/course/hook';
+import useGetClasses from '../../hooks/ClassHook/useGetClasses';
 import { useNavigate } from 'react-router-dom';
 import { useRole, useUserStateValue } from '../../redux/user/hook';
 
 const Classes = () => {
-    useFetchAllAssignedCourses()
-
     let navigate = useNavigate()
-    const AssignedCourses = useAssignedCourses()
+    const {assignedCourses} = useGetClasses();
     const Role = useRole()
     const user = useUserStateValue()
-
     const [OpenMiniPopupClasses, setOpenMiniPopupClasses] = useState("")
-    const [assignedCourses, setAssignedCourses] = useState([])
     const [selectedID, setSelcetedID] = useState("")
     const [searchCoursesData, setSearchCoursesData] = useState([])
-    useEffect(() => {
-        if (AssignedCourses.length > 0) {
-            setAssignedCourses([...AssignedCourses])
-        }
-    }, [AssignedCourses])
+
     return (
         <Template>
             <TemplateSearch>
@@ -42,13 +29,6 @@ const Classes = () => {
                 </div>
                 <div>Total Courses: {assignedCourses.length}</div>
             </TemplateTitle>
-            {/* <TemplateLineAction>
-                <LineAction
-                    name={"Show hidden classes"}
-                    checkbox
-                // click={openModal}
-                />
-            </TemplateLineAction> */}
             <TemplateData>
 
                 <Grid container spacing={2}  >
