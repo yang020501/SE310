@@ -2,60 +2,11 @@ import React from 'react'
 import { TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import MyButton from '../components/MyButton';
-import { useState } from 'react';
-import Alert from '@mui/material/Alert';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../redux/user/userSlice';
 import MyBackdrop from '../components/MyBackdrop';
-import { setLoading } from '../redux/user/loginLoadingSlice';
-import { useNavigate } from 'react-router-dom';
+import useLogin from '../hooks/useLogin';
 
 const Login = () => {
-    let dispatch = useDispatch()
-    let navigate = useNavigate()
-    const userState = useSelector(state => state.userState)
-    const initialForm = {
-        username: "",
-        rawPassword: ""
-    }
-    const [loginForm, setLoginForm] = useState(initialForm)
-    const [alert, setAlert] = useState(null)
-    const { username, rawPassword } = loginForm
-    const onChange = (e) => {
-        setLoginForm({
-            ...loginForm,
-            [e.target.name]: e.target.value
-        })
-    }
-    const handleSubmit = (event) => {
-
-        event.preventDefault();
-        event.stopPropagation();
-        dispatch(login(loginForm))
-
-    }
-    useEffect(() => {
-        if (userState.loading === false) {
-            dispatch(setLoading(false))
-            if (userState.err && userState.err !== "") {
-                setAlert(<Alert severity="error">{userState.err}!</Alert>)
-            }
-            else if (userState.user) {
-                navigate('/')
-            }
-        }
-        else
-            dispatch(setLoading(true))
-    }, [userState]);
-    useEffect(() => {
-        let timer1 = setTimeout(() => {
-            setAlert(null)
-        }, 2000)
-        return () => {
-            clearTimeout(timer1)
-        }
-    }, [alert])
+    const {username, rawPassword, onChange,  alert, handleSubmit } = useLogin();
     return (
         <div className='login'>
             <div className='login-form'>
