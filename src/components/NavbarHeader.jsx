@@ -90,13 +90,20 @@ const NavbarHeader = props => {
                                             Courses
                                         </Link>
                                     </div>
-                                    // :
-                                    // (role === "lecturer" || role === "student") ?
-                                    //     <div className="navbarheader-side-sidemenu-body-item">
-                                    //         <Link to={"/classes"}>
-                                    //             Classes
-                                    //         </Link>
-                                    //     </div>
+                                    :
+                                    (role === "student") ?
+                                    <div>
+                                        <div className="navbarheader-side-sidemenu-body-item">
+                                            <Link to={"/courses/register"}>
+                                                Register to Course
+                                            </Link>
+                                        </div>
+                                        <div className="navbarheader-side-sidemenu-body-item">
+                                        <Link to={"/courses"}>
+                                            Courses
+                                        </Link>
+                                        </div>
+                                    </div>
                                     :
                                     <div className="navbarheader-side-sidemenu-body-item">
                                         <Link to={"/courses"}>

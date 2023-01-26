@@ -37,4 +37,38 @@ export const useFetchAllStudentsAssigned = (id) => {
         fetch()
     }, [])
     return result
-}   
+}
+
+export const useFetchAvailableCourses = () => {
+    const [result, setResult] = useState([])
+    const fetch = async () => {
+        const rs = await courseApi.fetchAvailableCourses().catch(data => { return data.response })
+        if (rs.status < 200 || rs.status >= 300) {
+            setResult("false")
+            return
+        }
+        setResult(rs.data)
+
+    }
+    useEffect(() => {
+        fetch()
+    }, [])
+    return result
+}
+
+export const useFetchRegisteredCourses = () => {
+    const [result, setResult] = useState([])
+    const fetch = async () => {
+        const rs = await courseApi.fetchRegisteredCourses().catch(data => { return data.response })
+        if (rs.status < 200 || rs.status >= 300) {
+            setResult("false")
+            return
+        }
+        setResult(rs.data)
+
+    }
+    useEffect(() => {
+        fetch()
+    }, [])
+    return result
+}

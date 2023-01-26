@@ -38,3 +38,10 @@ export const studentsHeaders = variable([
   "Email",
   "Role"
 ])
+
+export const availableCoursesHeaders = variable([
+  "Course Code",
+  "Course Name",
+  "Date Of Week",
+  "Session"
+])

@@ -30,6 +30,12 @@ const fieldInclude = (str) => {
     if (tmp.includes("EMAIL")) {
         return 330
     }
+    if(tmp.includes("COURSE CODE")){
+        return 200
+    }
+    if(tmp.includes("DATE OF WEEK") || tmp.includes("SESSION")){
+        return 250
+    }
     return 100
 }
 export default header
