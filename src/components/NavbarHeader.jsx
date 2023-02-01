@@ -92,24 +92,29 @@ const NavbarHeader = props => {
                                     </div>
                                     :
                                     (role === "student") ?
-                                    <div>
+                                        <div>
+                                            <div className="navbarheader-side-sidemenu-body-item">
+                                                <Link to={"/courses/register"}>
+                                                    Register Courses
+                                                </Link>
+                                            </div>
+                                            <div className="navbarheader-side-sidemenu-body-item">
+                                                <Link to={"/schedule"}>
+                                                    Schedule
+                                                </Link>
+                                            </div>
+                                            <div className="navbarheader-side-sidemenu-body-item">
+                                                <Link to={"/courses"}>
+                                                    Courses
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        :
                                         <div className="navbarheader-side-sidemenu-body-item">
-                                            <Link to={"/courses/register"}>
-                                                Register to Course
+                                            <Link to={"/courses"}>
+                                                Courses
                                             </Link>
                                         </div>
-                                        <div className="navbarheader-side-sidemenu-body-item">
-                                        <Link to={"/courses"}>
-                                            Courses
-                                        </Link>
-                                        </div>
-                                    </div>
-                                    :
-                                    <div className="navbarheader-side-sidemenu-body-item">
-                                        <Link to={"/courses"}>
-                                            Courses
-                                        </Link>
-                                    </div>
                         }
                     </div>
                 </div>

@@ -14,19 +14,21 @@ import Classes from "./pages/User/Classes";
 import ClassDetail from "./pages/User/ClassDetail";
 import CourseRegister from "./pages/User/CourseRegister";
 import { useSelector } from 'react-redux';
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import HookTesting from "./pages/HookTesting";
+import Timetable from "./components/Timetable";
+import Schedule from "./pages/User/Schedule";
 
 function App() {
-  
+
   const role = useSelector(state => state.userState.user ? state.userState.user.role : "")
   useEffect(() => {
-    
+
   }, []);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/test" element={<HookTesting/>}/>
+        <Route path="/test" element={<HookTesting />} />
         <Route index path="/" element={<Landing />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
@@ -44,8 +46,8 @@ function App() {
                     <Route path="/courses" element={<Classes />} />
                     <Route path="/courses/:courseId" element={<Class />} />
                     <Route path="/courses/:courseId/:blockId" element={<ClassDetail />} />
-                  (role === "student") ? 
-                  <Route path="/courses/register" element={<CourseRegister />} />
+                    <Route path="/schedule" element={<Schedule />} />
+                    {role === "student" ? <Route path="/courses/register" element={<CourseRegister />} /> : <></>}
                   </React.Fragment> :
                   <></>
           }

@@ -1,0 +1,17 @@
+.timetable {
+    &-title{
+        font-size: 20pt;
+        padding: 1rem;
+        text-align: center;
+    }
+    &-table {
+        .MuiTableCell-root {
+            border: 1px solid black;
+            text-align: center;
+        }
+        .MuiTableContainer-root {
+            border-radius: none;
+        }
+        
+    }
+}
