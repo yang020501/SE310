@@ -10,25 +10,26 @@ import Template, {
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
-import { useDispatch } from 'react-redux';
 import { CourseHeaders, LecturerHeaders } from '../../utils/datagridHeader';
 import useLoadCourses from '../../hooks/CoursesPageHooks/useLoadCourses';
 import useAddLectures from '../../hooks/CoursesPageHooks/useAddLecture';
 import useDeleteLecture from '../../hooks/CoursesPageHooks/useDeleteLecture';
 import useCreateCourse from '../../hooks/CoursesPageHooks/useCreateCourse';
 import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
+import { Select, MenuItem } from '@mui/material';
+import { parseToLocalDate } from '../../utils/parseDate';
+
 const Courses = () => {
-  let dispatch = useDispatch()
   let navigate = useNavigate()
   const { Courses ,rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses, 
     OpenAddLecturerModal ,setOpenAddLecturerModal } = useLoadCourses();
   const { Lecturers, leturersRows, searchLecturersData, setSearchLecturersData } = useAddLectures(selectCourseID, Courses, setOpenAddLecturerModal );
   const { handleRemoveLecturer } = useDeleteLecture(selectLecturerID, selectCourseID, Courses, Lecturers, searchLecturersData
     ,setSearchLecturersData);
-  const {coursename, coursecode, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal
+  const {coursename, coursecode, beginDate, endDate, dateOfWeek, session, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal
   ,searchCourseData, setSearchCourseData} = useCreateCourse();
  const {handleDeleteCourse} = useDeleteCourse(searchCourseData, setSearchCourseData, selectCourseID, Courses)
-  
+    console.log(beginDate)
 
   return (
     <Template>
@@ -90,6 +91,63 @@ const Courses = () => {
               </div>
               <div className="template-modal-content-field-content-input" >
                 <Input required name='coursename' value={coursename} onChange={onCourseFormChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter begin date:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input required type='date' name='beginDate' value={parseToLocalDate(beginDate)} onChange={onCourseFormChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter end date:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input required type='date' name='endDate' value={parseToLocalDate(endDate)} onChange={onCourseFormChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter date of Week:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+               <Select labelId='dateofWeek'
+               id='dateofWeek'
+               label='dateofWeek'
+               name='dateOfWeek'
+               value={dateOfWeek}
+               onChange={onCourseFormChange}
+               required
+               >
+                  <MenuItem value={0}>Monday</MenuItem>
+                  <MenuItem value={1}>Tuesday</MenuItem>
+                  <MenuItem value={2}>Wednesday</MenuItem>
+                  <MenuItem value={3}>Thursday</MenuItem>
+                  <MenuItem value={4}>Friday</MenuItem>
+                  <MenuItem value={5}>Saturday</MenuItem>
+                  <MenuItem value={6}>Sunday</MenuItem>
+                </Select>
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter Session:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+               <Select labelId='session'
+               id='session'
+               label='session'
+               name='session'
+               value={session}
+               onChange={onCourseFormChange}
+               required
+               >
+                  <MenuItem value={true}>Morning</MenuItem>
+                  <MenuItem value={false}>Afternoon</MenuItem>
+                </Select>
               </div>
             </div>
             <Divider variant="middle" />

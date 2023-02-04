@@ -9,6 +9,7 @@ import courseApi from '../../api/courseAPI'
 import { useDispatch } from 'react-redux'
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice'
 import notifyMessage from '../../utils/notifyMessage'
+import { findElementById } from '../../utils/uitility'
 
 const CourseRegister = () => {
     let dispatch = useDispatch();
@@ -24,17 +25,29 @@ const CourseRegister = () => {
     const handleRegisterCourse = async (event) =>{
         event.preventDefault()
         event.stopPropagation()
-        console.log(checkCourses)
         if(checkCourses.length > 0 ){
             if(window.confirm(`Register All checked Courses?`)) {
                 let regisData = {
-                    courseId: checkCourses
+                    coursesId: checkCourses
                 }
-                console.log(regisData.courseId)
                 let rs = await courseApi.registerToCourse(regisData).catch(data => { return data.response })
                 if(await rs.status === 200) {
                     dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Register Success.")));
-                    window.location.reload();
+                    //window.location.reload();
+                    let newAvailableCourses = availableRows.filter(item => {return ! checkCourses.includes(item.id)} )
+                    console.log(newAvailableCourses)
+                    let newRegisteredCourses = checkCourses.map((item, index) => {
+                        return {
+                          ...findElementById(item, availableRows),
+                          dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
+                          session: item.session ? 'Morning' : 'Afternoon'
+                        }
+                      })
+                      setRegisteredRows([
+                        ...registeredRows,
+                        ...newRegisteredCourses
+                      ])
+                      setAvailableRows([...newAvailableCourses])
                 }
                 else {
                     if (rs.status === 400)
@@ -46,8 +59,41 @@ const CourseRegister = () => {
         }
     }
 
-    const handleCancelRegisteredCourse = () =>{
-
+    const handleCancelRegisteredCourse = async (event) =>{
+        event.preventDefault()
+        event.stopPropagation()
+        console.log(checkCourses)
+        if(checkCourses.length > 0 ){
+            if(window.confirm(`Register All checked Courses?`)) {
+                let regisData = {
+                    coursesId: checkCourses
+                }
+                let rs = await courseApi.cancelRegisteredCourse(regisData).catch(data => { return data.response })
+                if(await rs.status === 200) {
+                    dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Cancel Success.")));
+                    //window.location.reload();
+                    let newRegisteredCourses = registeredRows.filter(item => {return ! checkCourses.includes(item.id)} )
+                    let newAvailableCourses = checkCourses.map((item, index) => {
+                        return {
+                          ...findElementById(item, registeredRows),
+                          dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
+                          session: item.session ? 'Morning' : 'Afternoon'
+                        }
+                      })
+                      setAvailableRows([
+                        ...availableRows,
+                        ...newAvailableCourses
+                      ])
+                      setRegisteredRows([...newRegisteredCourses])
+                }
+                else {
+                    if (rs.status === 400)
+                    dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Can't cancel this course")))
+                  else
+                    dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+                }
+            }
+        }
     }
     useEffect(() => {
         if(AvailableCourse.length > 0) {
@@ -77,14 +123,14 @@ const CourseRegister = () => {
 }, [RegisterdCourse])
   return (
     <div>
-        <TemplateTitle>Registered Courses</TemplateTitle>
-        {(RegisterdCourse.length > 0) ?
+        {(registeredRows.length > 0) ?
         <Template>
+            <TemplateTitle><h1>Registered Courses</h1></TemplateTitle>
             <TemplateData>
                 <MyDataGrid CheckboxFunc={CheckCourses} Checkbox ColumnHeader={availableCoursesHeaders} Data={registeredRows}/>
             </TemplateData>
             <TemplateLineAction>
-                <Button variant='error' >Cancel Register</Button>
+                <Button variant='error' onClick={handleCancelRegisteredCourse}>Cancel Register</Button>
             </TemplateLineAction>
         </Template>
         : []

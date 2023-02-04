@@ -44,6 +44,10 @@ const courseApi = {
     registerToCourse: (body) => {
         const url =`/api/register-course/register`
         return axiosClient.post(url, {...body})
+    },
+    cancelRegisteredCourse: (body) =>{
+        const url =`/api/register-course/cancel-course`
+        return axiosClient.post(url, {...body})
     }
 
 }

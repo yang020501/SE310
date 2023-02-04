@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setSnackbar } from "../../redux/snackbar/snackbarSlice";
 import courseApi from "../../api/courseAPI";
 import notifyMessage from "../../utils/notifyMessage";
+import { parseToISOSDate, today } from "../../utils/parseDate";
 
 const useCreateCourse = () =>{
     const dispatch = useDispatch();
@@ -11,14 +12,25 @@ const useCreateCourse = () =>{
         coursename: "",
         lecturerUserName: null,
         coursecode: "",
+        beginDate: today(),
+        endDate: today(),
+        dateOfWeek: 0,
+        session: true
       }
     const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
     const [courseForm, setCourseForm] = useState(initialCourseForm)
-    const { coursename, coursecode } = courseForm
+    const { coursename, coursecode, beginDate, endDate, dateOfWeek, session } = courseForm
     const [searchCourseData, setSearchCourseData] = useState([])
 
 
     const onCourseFormChange = (e) => {
+      if(e.target.value === 'beginDate' || e.target.value === 'endDate')
+      {
+        setCourseForm({
+          ...courseForm,
+          [e.target.name]: parseToISOSDate(e.target.value)
+        })
+      }
         setCourseForm({
           ...courseForm,
           [e.target.name]: e.target.value
@@ -47,7 +59,7 @@ const useCreateCourse = () =>{
         }
       }
 
-      return {coursename, coursecode, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal,
+      return {coursename, coursecode, beginDate, endDate, dateOfWeek, session, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal,
     searchCourseData, setSearchCourseData};
 }
 
