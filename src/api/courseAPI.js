@@ -34,21 +34,26 @@ const courseApi = {
         return axiosClient.patch(url, { ...body })
     },
     fetchAvailableCourses: () => {
-        const url =`/api/register-course/available-courses`
+        const url = `/api/register-course/available-courses`
         return axiosClient.get(url)
     },
     fetchRegisteredCourses: () => {
-        const url =`/api/register-course/registed-course`
+        const url = `/api/register-course/registed-course`
         return axiosClient.get(url)
     },
     registerToCourse: (body) => {
-        const url =`/api/register-course/register`
-        return axiosClient.post(url, {...body})
+        const url = `/api/register-course/register`
+        return axiosClient.post(url, { ...body })
     },
-    cancelRegisteredCourse: (body) =>{
-        const url =`/api/register-course/cancel-course`
-        return axiosClient.post(url, {...body})
+    cancelRegisteredCourse: (body) => {
+        const url = `/api/register-course/cancel-course`
+        return axiosClient.post(url, { ...body })
+    },
+    createCoursesByCSV: (body) => {
+        const url = `/api/courses/create-courses-with-csv`
+        return axiosClient.post(url, { ...body })
     }
+
 
 }
 export default courseApi

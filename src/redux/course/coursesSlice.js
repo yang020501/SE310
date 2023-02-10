@@ -45,7 +45,14 @@ const coursesSlice = createSlice({
 
             state.courses = courses
         },
+        addCoursesCSV: (state, action) => {
+            let new_courses = action.payload
+            let cur_courses = state.courses
 
+            cur_courses.concat(new_courses)
+
+            state.courses = cur_courses
+        },
         updateCourses: (state, action) => {
             let course = action.payload
             let courses = state.courses
@@ -95,7 +102,8 @@ const coursesSlice = createSlice({
 export const {
     addCourses,
     updateCourses,
-    deleteCourses
+    deleteCourses,
+    addCoursesCSV
 } = coursesSlice.actions
 
 export default coursesSlice.reducer
