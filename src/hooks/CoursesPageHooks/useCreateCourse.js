@@ -18,6 +18,7 @@ const useCreateCourse = () =>{
         session: true
       }
     const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
+    const [OpenCreateCoursesModal, setOpenCreateCoursesModal] = useState(false)
     const [courseForm, setCourseForm] = useState(initialCourseForm)
     const { coursename, coursecode, beginDate, endDate, dateOfWeek, session } = courseForm
     const [searchCourseData, setSearchCourseData] = useState([])
@@ -60,7 +61,7 @@ const useCreateCourse = () =>{
       }
 
       return {coursename, coursecode, beginDate, endDate, dateOfWeek, session, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal,
-    searchCourseData, setSearchCourseData};
+    searchCourseData, setSearchCourseData, OpenCreateCoursesModal, setOpenCreateCoursesModal};
 }
 
 export default useCreateCourse
