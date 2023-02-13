@@ -19,31 +19,29 @@ import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
 import { Select, MenuItem } from '@mui/material';
 import { parseToLocalDate } from '../../utils/parseDate';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import courseApi from '../../api/courseAPI';
+import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
+import notifyMessage from '../../utils/notifyMessage';
+import { useDispatch } from "react-redux";
+import CourseCreateResult from '../../components/CourseCreateResult';
 
 const Courses = () => {
   let navigate = useNavigate()
-  // var file = new FileReader()
-  // reader.onload = function(e) {
-  //   var text = reader.result;
-  // }
+  let dispatch = useDispatch()
 
-  // reader.readAsText(file, encoding);
   const [csvFile, setCsvFile] = useState();
   const [csvArray, setCsvArray] = useState([]);
-  console.log(csvArray);
-  const loadcsv = (e) => {
-    e.preventDefault()
+
+  const loadCSV = () => {
     const file = csvFile;
     const reader = new FileReader();
 
     reader.onload = function (e) {
       const text = e.target.result;
       processCSV(text)
-      console.log(text,"hello");
     }
-
     reader.readAsText(file);
-    
   }
   const processCSV = (str, delim = ',') => {
     const headers = str.slice(0, str.indexOf('\n')).split(delim);
@@ -57,8 +55,34 @@ const Courses = () => {
       }, {})
       return eachObject;
     })
-
+    newArray.pop()
     setCsvArray(newArray)
+  }
+  const handleCreateCourses = async (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (csvArray.length > 0) {
+      if (window.confirm("Create all courses?")) {
+        let data = csvArray
+        let rs = await courseApi.createCoursesByCSV(data).catch(data => { return data.response })
+        if (await rs.status === 200) {
+          dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("courses")))
+          setCsvArray([])
+          setOpenCreateCoursesModal(false)
+          dispatch((rs.data))
+          if (searchCourseData.length > 0)
+            setSearchCourseData([])
+        }
+        else {
+          if (rs.status === 400)
+            dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course", "course code or name has existed!")))
+          else
+            dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course")))
+        }
+      }
+    } else {
+      dispatch(setSnackbar(notifyMessage.CREATE_FAIL("CSV file is not valid or not uploaded!")))
+    }
   }
   const { Courses, rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses,
     OpenAddLecturerModal, setOpenAddLecturerModal } = useLoadCourses();
@@ -69,7 +93,13 @@ const Courses = () => {
     , searchCourseData, setSearchCourseData, OpenCreateCoursesModal, setOpenCreateCoursesModal } = useCreateCourse();
   const { handleDeleteCourse } = useDeleteCourse(searchCourseData, setSearchCourseData, selectCourseID, Courses)
 
+  useEffect(() => {
 
+    if (csvFile) {
+      loadCSV()
+    }
+
+  }, [csvFile]);
   return (
     <Template>
       <TemplateSearch>
@@ -202,19 +232,22 @@ const Courses = () => {
       </TemplateModal>
       <TemplateModal
         open={OpenCreateCoursesModal}
-        size="sm"
+        size="lg"
         form={true}
-        onsubmit={loadcsv}
+        onsubmit={handleCreateCourses}
       >
         <TemplateModalTitle>
           <p> Create new courses:</p>
           <Divider variant="middle" />
         </TemplateModalTitle>
         <TemplateModalBody>
-          <input type='file' accept='.csv' id='csvFile' onChange={(e) => setCsvFile(e.target.files[0])} />
-
+          <input  type='file' accept='.csv' id='csvFile' onChange={(e) => setCsvFile(e.target.files[0])} />
+          <CourseCreateResult data={csvArray} />
         </TemplateModalBody>
-        <TemplateModalAction activeRight={"Create"} funcError={() => setOpenCreateCoursesModal(false)} size="sm" />
+        <TemplateModalAction activeRight={"Create"} funcError={() => {
+          setOpenCreateCoursesModal(false)
+          setCsvArray([])
+        }} size="sm" />
       </TemplateModal>
       <TemplateModal
         open={OpenAddLecturerModal}

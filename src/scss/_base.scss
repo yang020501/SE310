@@ -11,7 +11,8 @@ button {
     border-radius: $border-radius;
     color: inherit;
 }
-button:hover,button:focus {
+button:hover,
+button:focus {
     background-color: #00000066;
     opacity: 0.7;
 }
@@ -23,7 +24,7 @@ body {
     @include mobile {
         font-size: 9pt;
     }
-    
+
     .MuiButton-root {
         width: 100%;
         height: 100%;
@@ -51,13 +52,12 @@ body {
             border-radius: $border-radius;
             color: #fff;
         }
-        &.btnError{
+        &.btnError {
             background-color: $btn-second-bg;
             transition: 0.25s;
         }
         &.btnError:hover,
-        &.btnError:focus
-        {
+        &.btnError:focus {
             background-color: $btn-second-bg;
             transition: 0.25s;
         }
@@ -67,13 +67,12 @@ body {
         color: $btn-main-color;
         background-color: $btn-main-bg;
     }
-    .pulse:hover{
+    .pulse:hover {
         animation: pulse 1s;
         box-shadow: 0 0 0 1rem rgba(#fff, 0);
     }
 
     .btnPassword {
-        
         .MuiButton-root:hover,
         .MuiButton-root {
             background-color: $main-bg;
@@ -94,7 +93,7 @@ body {
     .MuiDataGrid-cell {
         color: $txt-third-color;
         font-weight: 700;
-        .MuiButton-root{
+        .MuiButton-root {
             width: 50%;
             height: 50%;
             font-size: 8pt;
@@ -161,3 +160,10 @@ a {
         color: black !important;
     }
 }
+#csvFile {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 14pt;
+}
+
