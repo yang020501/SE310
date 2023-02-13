@@ -51,7 +51,7 @@ const courseApi = {
     },
     createCoursesByCSV: (body) => {
         const url = `/api/courses/create-courses-with-csv`
-        return axiosClient.post(url, { ...body })
+        return axiosClient.post(url, body)
     }
 
 
