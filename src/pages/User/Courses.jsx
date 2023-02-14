@@ -18,7 +18,7 @@ import useDeleteLecture from '../../hooks/CoursesPageHooks/useDeleteLecture';
 import useCreateCourse from '../../hooks/CoursesPageHooks/useCreateCourse';
 import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
 import { Select, MenuItem } from '@mui/material';
-import { parseToLocalDate } from '../../utils/parseDate';
+import { parseToISOSDate, parseToLocalDate } from '../../utils/parseDate';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import courseApi from '../../api/courseAPI';
@@ -45,7 +45,9 @@ const Courses = () => {
     reader.readAsText(file);
   }
   const processCSV = (str, delim = ',') => {
-    const headers = str.slice(0, str.indexOf('\n')).split(delim);
+
+    const headers = str.slice(0, str.indexOf('\r\n')).split(delim);
+
     const rows = str.slice(str.indexOf('\n') + 1).split('\n');
 
     const newArray = rows.map(row => {
@@ -64,13 +66,28 @@ const Courses = () => {
     event.stopPropagation()
     if (csvArray.length > 0) {
       if (window.confirm("Create all courses?")) {
-        let data = csvArray
+        let data = [...csvArray]
+        data = data.map(item => {
+
+          return {
+            ...item,
+            beginDate: parseToISOSDate(item.beginDate),
+            endDate: parseToISOSDate(item.endDate),
+            session: Boolean(item.session),
+            dateOfWeek: Number(item.dateOfWeek),
+            lecturerId: null
+          }
+        })
+        data = JSON.stringify(data)
+        console.log(data);
+        
         let rs = await courseApi.createCoursesByCSV(data).catch(data => { return data.response })
         if (await rs.status === 200) {
+
           dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("courses")))
           setCsvArray([])
           setOpenCreateCoursesModal(false)
-          dispatch((rs.data))
+
           if (searchCourseData.length > 0)
             setSearchCourseData([])
         }
@@ -256,7 +273,7 @@ const Courses = () => {
           <Divider variant="middle" />
         </TemplateModalTitle>
         <TemplateModalBody>
-          <input  type='file' accept='.csv' id='csvFile' onChange={(e) => setCsvFile(e.target.files[0])} />
+          <input type='file' accept='.csv' id='csvFile' onChange={(e) => setCsvFile(e.target.files[0])} />
           <CourseCreateResult data={csvArray} />
         </TemplateModalBody>
         <TemplateModalAction activeRight={"Create"} funcError={() => {
