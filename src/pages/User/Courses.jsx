@@ -10,7 +10,7 @@ import Template, {
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 import { CourseHeaders, LecturerHeaders } from '../../utils/datagridHeader';
 import useLoadCourses from '../../hooks/CoursesPageHooks/useLoadCourses';
 import useAddLectures from '../../hooks/CoursesPageHooks/useAddLecture';
@@ -26,6 +26,7 @@ import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/notifyMessage';
 import { useDispatch } from "react-redux";
 import CourseCreateResult from '../../components/CourseCreateResult';
+import { addCoursesCSV } from '../../redux/course/coursesSlice';
 
 const Courses = () => {
   let navigate = useNavigate()
@@ -79,15 +80,14 @@ const Courses = () => {
           }
         })
         data = JSON.stringify(data)
-        console.log(data);
-        
+
         let rs = await courseApi.createCoursesByCSV(data).catch(data => { return data.response })
         if (await rs.status === 200) {
 
           dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("courses")))
           setCsvArray([])
           setOpenCreateCoursesModal(false)
-
+          dispatch(addCoursesCSV(JSON.parse(data)))
           if (searchCourseData.length > 0)
             setSearchCourseData([])
         }
@@ -102,19 +102,19 @@ const Courses = () => {
       dispatch(setSnackbar(notifyMessage.CREATE_FAIL("CSV file is not valid or not uploaded!")))
     }
   }
-  const handleFinalizeCourses = async () =>{
+  const handleFinalizeCourses = async () => {
     if (window.confirm(`Register All checked Courses?`)) {
-    let rs = await courseApi.finalizeCourses().catch(data => {return data.response})
-    if (await rs.status === 200) {
-      dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("Finalize Registration Successfully!")))
+      let rs = await courseApi.finalizeCourses().catch(data => { return data.response })
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("Finalize Registration Successfully!")))
+      }
+      else {
+        if (rs.status === 400)
+          dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course", "Finalize Registration Failed!")))
+        else
+          dispatch(setSnackbar(notifyMessage.CREATE_FAIL("Unauthorized!")))
+      }
     }
-    else {
-      if (rs.status === 400)
-        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course", "Finalize Registration Failed!")))
-      else
-        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("Unauthorized!")))
-    }
-  }
   }
   const { Courses, rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses,
     OpenAddLecturerModal, setOpenAddLecturerModal } = useLoadCourses();
