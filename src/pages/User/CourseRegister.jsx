@@ -10,8 +10,26 @@ import { useDispatch } from 'react-redux'
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice'
 import notifyMessage from '../../utils/notifyMessage'
 import { findElementById } from '../../utils/uitility'
+import { useNavigate } from 'react-router-dom'
+
+const parseDay = (value) => {
+  let tmp = Number(value)
+  let day = ""
+  switch (tmp) {
+      case 0: day = 'Monday'; break;
+      case 1: day = 'Tuesday'; break;
+      case 2: day = 'Wednesday'; break;
+      case 3: day = 'Thursday'; break;
+      case 4: day = 'Friday'; break;
+      case 5: day = "Saturday"; break;
+      case 6: day = 'Sunday'; break;
+      default: day = ""; break;
+  }
+  return day
+}
 
 const CourseRegister = () => {
+  let navigate = useNavigate();
   let dispatch = useDispatch();
   const [searchAvailableData, setSearchAvailableData] = useState([]);
   const [checkCourses, setCheckCourses] = useState([]);
@@ -33,14 +51,10 @@ const CourseRegister = () => {
         let rs = await courseApi.registerToCourse(regisData).catch(data => { return data.response })
         if (await rs.status === 200) {
           dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Register Success.")));
-          //window.location.reload();
           let newAvailableCourses = availableRows.filter(item => { return !checkCourses.includes(item.id) })
-          console.log(newAvailableCourses)
           let newRegisteredCourses = checkCourses.map((item, index) => {
             return {
-              ...findElementById(item, availableRows),
-              dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
-              session: item.session ? 'Morning' : 'Afternoon'
+              ...findElementById(item, availableRows)
             }
           })
           setRegisteredRows([
@@ -53,7 +67,7 @@ const CourseRegister = () => {
           if (rs.status === 400)
             dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Already register to this course")))
           else
-            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course")))
+            dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("course", "Courses have the same schedule")))
         }
       }
     }
@@ -62,7 +76,6 @@ const CourseRegister = () => {
   const handleCancelRegisteredCourse = async (event) => {
     event.preventDefault()
     event.stopPropagation()
-    console.log(checkCourses)
     if (checkCourses.length > 0) {
       if (window.confirm(`Register All checked Courses?`)) {
         let regisData = {
@@ -75,9 +88,7 @@ const CourseRegister = () => {
           let newRegisteredCourses = registeredRows.filter(item => { return !checkCourses.includes(item.id) })
           let newAvailableCourses = checkCourses.map((item, index) => {
             return {
-              ...findElementById(item, registeredRows),
-              dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
-              session: item.session ? 'Morning' : 'Afternoon'
+              ...findElementById(item, registeredRows)
             }
           })
           setAvailableRows([
@@ -95,13 +106,22 @@ const CourseRegister = () => {
       }
     }
   }
+  const checkRegisTime = async () => {
+    let rs = await courseApi.checkRegistrationCourses().catch(data => { return data.response })
+    if(await rs.status === 404) {
+      navigate('/404')
+    }
+  }
+  useEffect(()=>{
+    checkRegisTime();
+  },[checkRegisTime])
   useEffect(() => {
     if (AvailableCourse.length > 0) {
       let tmp = [...AvailableCourse];
       tmp = tmp.map((item) => {
         return {
           ...item,
-          dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
+          dateOfWeek: parseDay(item.dateOfWeek),
           session: item.session ? 'Morning' : 'Afternoon'
         }
       })
@@ -114,7 +134,7 @@ const CourseRegister = () => {
       tmp = tmp.map((item) => {
         return {
           ...item,
-          dateOfWeek: (item.dateOfWeek < 6) ? String(item.dateOfWeek + 1) : 'Sunday',
+          dateOfWeek: parseDay(item.dateOfWeek),
           session: item.session ? 'Morning' : 'Afternoon'
         }
       })

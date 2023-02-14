@@ -10,6 +10,7 @@ import Template, {
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
+import {Button} from '@mui/material';
 import { CourseHeaders, LecturerHeaders } from '../../utils/datagridHeader';
 import useLoadCourses from '../../hooks/CoursesPageHooks/useLoadCourses';
 import useAddLectures from '../../hooks/CoursesPageHooks/useAddLecture';
@@ -83,6 +84,20 @@ const Courses = () => {
     } else {
       dispatch(setSnackbar(notifyMessage.CREATE_FAIL("CSV file is not valid or not uploaded!")))
     }
+  }
+  const handleFinalizeCourses = async () =>{
+    if (window.confirm(`Register All checked Courses?`)) {
+    let rs = await courseApi.finalizeCourses().catch(data => {return data.response})
+    if (await rs.status === 200) {
+      dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("Finalize Registration Successfully!")))
+    }
+    else {
+      if (rs.status === 400)
+        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("course", "Finalize Registration Failed!")))
+      else
+        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("Unauthorized!")))
+    }
+  }
   }
   const { Courses, rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses,
     OpenAddLecturerModal, setOpenAddLecturerModal } = useLoadCourses();
@@ -262,6 +277,9 @@ const Courses = () => {
         </TemplateModalBody>
         <TemplateModalAction funcError={() => setOpenAddLecturerModal(false)} size="lg" />
       </TemplateModal>
+      <TemplateLineAction>
+        <Button onClick={handleFinalizeCourses}>Finalize Course Registration</Button>
+      </TemplateLineAction>
     </Template>
   )
 }

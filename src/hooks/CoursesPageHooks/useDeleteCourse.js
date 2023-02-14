@@ -16,7 +16,7 @@ const useDeleteCourse = (searchCourseData, setSearchCourseData, selectCourseID, 
           dispatch(setSnackbar(notifyMessage.ERROR("course is null!")))
           return
         }
-        if (window.confirm(`Delete course ${course.coursecode}-${course.coursename} ?`)) {
+        if (window.confirm(`Delete course ${course.id}-${course.coursename} ?`)) {
     
           let rs = await courseApi.deleteCourse(course.id).catch(data => { return data.response })
           if (await rs.status === 200) {
