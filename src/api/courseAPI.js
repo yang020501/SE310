@@ -51,7 +51,19 @@ const courseApi = {
     },
     createCoursesByCSV: (body) => {
         const url = `/api/courses/create-courses-with-csv`
-        return axiosClient.post(url, { ...body })
+        return axiosClient.post(url, body)
+    },
+    finalizeCourses: () => {
+        const url = `/api/register-course/finalize-courses-registraiton`
+        return axiosClient.post(url)
+    },
+    checkRegistrationCourses: () => {
+        const url = `/api/register-course/check-registration-timeline`
+        return axiosClient.get(url)
+    },
+    setRegistrationTimeline : (data) => {
+        const url = `/api/register-course/set-registration-timeline`
+        return axiosClient.post(url, {...data})
     }
 
 }

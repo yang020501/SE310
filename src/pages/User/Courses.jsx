@@ -18,7 +18,7 @@ import useDeleteLecture from '../../hooks/CoursesPageHooks/useDeleteLecture';
 import useCreateCourse from '../../hooks/CoursesPageHooks/useCreateCourse';
 import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
 import { Select, MenuItem } from '@mui/material';
-import { parseToISOSDate, parseToLocalDate } from '../../utils/parseDate';
+import { parseToISOSDate, parseToLocalDate, today } from '../../utils/parseDate';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import courseApi from '../../api/courseAPI';
@@ -30,10 +30,11 @@ import CourseCreateResult from '../../components/CourseCreateResult';
 const Courses = () => {
   let navigate = useNavigate()
   let dispatch = useDispatch()
-
   const [csvFile, setCsvFile] = useState();
   const [csvArray, setCsvArray] = useState([]);
-
+  const [openSetRegisModel, setOpenSetRegisModel] = useState(false);
+  const [startRegisDate, setStartRegisDate] = useState(today());
+  const [endRegisDate, setEndRegisDate] = useState(today());
   const loadCSV = () => {
     const file = csvFile;
     const reader = new FileReader();
@@ -79,7 +80,6 @@ const Courses = () => {
           }
         })
         data = JSON.stringify(data)
-        console.log(data);
         
         let rs = await courseApi.createCoursesByCSV(data).catch(data => { return data.response })
         if (await rs.status === 200) {
@@ -115,6 +115,26 @@ const Courses = () => {
         dispatch(setSnackbar(notifyMessage.CREATE_FAIL("Unauthorized!")))
     }
   }
+  }
+  const handleSetRegistrationTimeline = async (e) =>{
+    e.preventDefault();
+    e.stopPropagation();
+    const data = {
+      startDate: startRegisDate,
+      endDate: endRegisDate
+    }
+    
+    if(window.confirm(`Are you sure to set the timeline?`)) {
+      console.log(data)
+      let rs = await courseApi.setRegistrationTimeline(data).catch(data => {return data.response})
+      if (await rs.status === 200) {
+        dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("Set Timeline Successfully!")))
+      }
+      else {
+        dispatch(setSnackbar(notifyMessage.CREATE_FAIL("Set Timeline Failed!")))
+      }
+      
+    }
   }
   const { Courses, rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses,
     OpenAddLecturerModal, setOpenAddLecturerModal } = useLoadCourses();
@@ -297,6 +317,41 @@ const Courses = () => {
       <TemplateLineAction>
         <Button onClick={handleFinalizeCourses}>Finalize Course Registration</Button>
       </TemplateLineAction>
+      <TemplateLineAction>
+        <Button onClick={() => setOpenSetRegisModel(true)}>Set New Registration Timeline</Button>
+      </TemplateLineAction>
+      <TemplateModal
+      open={openSetRegisModel}
+      size="sm"
+      form={true}
+      onsubmit={handleSetRegistrationTimeline}>
+        <TemplateModalTitle>
+          <p>Set New Registration Timeline:</p>
+        <Divider variant="middle" />
+        </TemplateModalTitle>
+        <TemplateModalBody>
+        <div className="template-modal-content-field">
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter begin date:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input required type='date' name='beginDate' value={parseToLocalDate(startRegisDate)} onChange={(e) => {setStartRegisDate(parseToISOSDate(e.target.value))}} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Enter end date:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input required type='date' name='endDate' value={parseToLocalDate(endRegisDate)} onChange={(e) => {setEndRegisDate(parseToISOSDate(e.target.value))}} />
+              </div>
+            </div>
+            <Divider variant="middle" />
+          </div>
+        </TemplateModalBody>
+        <TemplateModalAction activeRight={"Create"} funcError={() => setOpenSetRegisModel(false)} size="sm" />
+      </TemplateModal>
     </Template>
   )
 }
